@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+ <!-- Start Banner Area -->
+ <section class="banner-area organic-breadcrumb">
+	<div class="container">
+		<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+			<div class="col-first">
+				<h1>Ajouter au panier</h1>
+				<nav class="d-flex align-items-center">
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End Banner Area -->
+    <section class="single-product-area section_gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% if product.image %}
+                        <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    <h1>{{ product.name }}</h1>
+                    <p>{{ product.description }}</p>
+                    <h3>${{ product.price }}</h3>
+                    <p>Stock: {{ product.stock }}</p>
+                    {% if user.is_authenticated and not user.is_staff %}
+                        <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" required>
+                            <button type="submit" class="primary-btn">Add to Cart</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

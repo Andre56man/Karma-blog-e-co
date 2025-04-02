@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>suppression</h1>
+                <nav class="d-flex align-items-center">
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+    <section class="section_gap">
+        <div class="container">
+            <h2>Confirmer la suppression</h2>
+            <p>Êtes-vous sûr de vouloir supprimer le produit "{{ product.name }}" ?</p>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="primary-btn">Oui, supprimer</button>
+                <a href="{% url 'index' %}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}
