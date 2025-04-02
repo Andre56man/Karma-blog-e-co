@@ -17,15 +17,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-7">
-                            <div class="banner-img">
-                                {% if featured_product.image %}
-                                    <img class="img-fluid" src="{{ featured_product.image.url }}" alt="{{ featured_product.name }}">
-                                {% else %}
-                                    <img class="img-fluid" src="{% static 'img/banner/banner-img.png' %}" alt="Default Banner">
-                                {% endif %}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -97,7 +88,6 @@
                                     </div>
                                     <div class="prd-bottom">
                                         {% if user.is_authenticated and not user.is_staff %}
-                                            
                                             <a href="{% url 'single-product' product.id %}" class="social-info">
                                                 <span class="lnr lnr-move"></span>
                                                 <p class="hover-text">View More</p>
@@ -128,7 +118,7 @@
                                 {% if latest_products.has_previous %}
                                     <li class="page-item">
                                         <a class="page-link" href="?page={{ latest_products.previous_page_number }}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
+                                            <span aria-hidden="true">«</span>
                                         </a>
                                     </li>
                                 {% endif %}
@@ -140,7 +130,7 @@
                                 {% if latest_products.has_next %}
                                     <li class="page-item">
                                         <a class="page-link" href="?page={{ latest_products.next_page_number }}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
+                                            <span aria-hidden="true">»</span>
                                         </a>
                                     </li>
                                 {% endif %}
