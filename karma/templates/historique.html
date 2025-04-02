@@ -1,0 +1,138 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1> Vos historiques</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="{% url 'cart' %}">Panier<span class="lnr lnr-arrow-right"></span></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mt-4">Bienvenue, {{ user.username }}</h2>
+                <p>Email : {{ user.email }}</p>
+
+                <h3 class="mt-4">Historique des commandes</h3>
+                {% if orders %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Numéro de commande</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Statut</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.created_at|date:"d M Y" }}</td>
+                                    <td>${{ order.grand_total|floatformat:2 }}</td>
+                                    <td>
+                                        {% if order.is_completed %}
+                                            <span class="badge badge-success">Complétée</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">En cours</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary">Voir</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    {% if orders.has_other_pages %}
+                        <div class="text-center mt-4">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    {% if orders.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous">
+                                                <span aria-hidden="true">«</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for num in orders.paginator.page_range %}
+                                        {% if orders.number == num %}
+                                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if orders.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+                                                <span aria-hidden="true">»</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>Aucune commande trouvée.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- CSS personnalisé -->
+    <style>
+        .table th, .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+            padding: 0.25em 0.5em;
+            border-radius: 0.2rem;
+        }
+        .badge-warning {
+            background-color: #ffc107;
+            color: black;
+            padding: 0.25em 0.5em;
+            border-radius: 0.2rem;
+        }
+        .pagination .page-link {
+            color: #333;
+            border-radius: 5px;
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        .pagination .page-link:hover {
+            background-color: #f5f5f5;
+            color: #ffba00;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #ffba00;
+            border-color: #ffba00;
+            color: white;
+        }
+    </style>
+{% endblock %}

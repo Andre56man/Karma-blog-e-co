@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Logged Out</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'login' %}">Login</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<!-- Start Logged Out Area -->
+<section class="login_box_area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="login_form_inner text-center">
+                    <h3>You’ve Been Logged Out</h3>
+                    <p>Thanks for visiting Karma Shop! You have been successfully logged out of your account.</p>
+                    <a class="primary-btn" href="{% url 'login' %}">Log In Again</a>
+                    <p class="text-muted mt-3">or <a href="{% url 'index' %}">Return to Homepage</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Logged Out Area -->
+{% endblock %}

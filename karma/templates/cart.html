@@ -1,0 +1,54 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>votre panier</h1>
+                    <nav class="d-flex align-items-center">
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <section class="cart-area section_gap">
+        <div class="container">
+            <h1>Votre panier</h1>
+            {% if cart_items %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix unitaire</th>
+                            <th>Sous-total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.product.price }}</td>
+                                <td>${{ item.subtotal }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="3"><strong>Total</strong></td>
+                            <td><strong>${{ total }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="{% url 'checkout' %}" class="primary-btn">Passer la commande</a>
+                <a href="{% url 'index' %}" class="primary-btn">Retournez</a>
+            {% else %}
+                <p>Votre panier est vide.</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

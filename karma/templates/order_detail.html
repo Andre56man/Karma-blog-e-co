@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Détails de la commande #{{ order.id }}</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="{% url 'index' %}">Accueil<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="#">Commande #{{ order.id }}</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="mt-4">Détails de la commande</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix unitaire</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderitem_set.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.price|floatformat:2 }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="3"><strong>Total payer</strong></td>
+                            <td>${{ order.total|floatformat:2 }}</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Confirmation</h1>
+					<nav class="d-flex align-items-center">
+						<a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Confirmation</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap">
+		<div class="container">
+			<h3 class="title_confirmation">Merci. Votre commande a été reçue.</h3>
+			{% if order %}
+				<div class="row order_d_inner">
+					<div class="col-lg-4">
+						<div class="details_item">
+							<h4>Informations de la commande</h4>
+							<ul class="list">
+								<li><a href="#"><span>Numéro de commande</span> : {{ order.id }}</a></li>
+								<li><a href="#"><span>Date</span> : {{ order.created_at|date:"d M Y" }}</a></li>
+								<li><a href="#"><span>Total</span> : ${{ order.total }}</a></li>
+								<li><a href="#"><span>Méthode de paiement</span> : Paiement par chèque (à personnaliser)</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="details_item">
+							<h4>Adresse de facturation</h4>
+							<ul class="list">
+								<li><a href="#"><span>Rue</span> : {{ user.profile.street|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Ville</span> : {{ user.profile.city|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Pays</span> : {{ user.profile.country|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Code postal</span> : {{ user.profile.postcode|default:"Non spécifié" }}</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="details_item">
+							<h4>Adresse de livraison</h4>
+							<ul class="list">
+								<li><a href="#"><span>Rue</span> : {{ user.profile.street|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Ville</span> : {{ user.profile.city|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Pays</span> : {{ user.profile.country|default:"Non spécifié" }}</a></li>
+								<li><a href="#"><span>Code postal</span> : {{ user.profile.postcode|default:"Non spécifié" }}</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="order_details_table">
+					<h2>Détails de la commande</h2>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Produit</th>
+									<th scope="col">Quantité</th>
+									<th scope="col">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in order.orderitem_set.all %}
+									<tr>
+										<td>
+											<p>{{ item.product.name }}</p>
+										</td>
+										<td>
+											<h5>x {{ item.quantity }}</h5>
+										</td>
+										<td>
+											<p>${{ item.price|floatformat:2 }}</p>
+										</td>
+									</tr>
+								{% endfor %}
+								<tr>
+									<td>
+										<h4>Sous-total</h4>
+									</td>
+									<td>
+										<h5></h5>
+									</td>
+									<td>
+										<p>${{ order.total|floatformat:2 }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h4>Frais de livraison</h4>
+									</td>
+									<td>
+										<h5></h5>
+									</td>
+									<td>
+										<p>Tarif fixe : $50.00</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h4>Total</h4>
+									</td>
+									<td>
+										<h5></h5>
+									</td>
+									<td>
+										<p>${{ order.total|add:50|floatformat:2 }}</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			{% else %}
+				<p>Aucune commande trouvée.</p>
+			{% endif %}
+		</div>
+	</section>
+	<!--================End Order Details Area =================-->
+{% endblock %}

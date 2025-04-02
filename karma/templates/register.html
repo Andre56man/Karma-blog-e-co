@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #f5f5f5; /* Light background similar to Karma Shop */
+            font-family: 'Arial', sans-serif;
+        }
+        .register-container {
+            max-width: 1200px; /* Wider container like Karma Shop */
+            margin: 50px auto;
+        }
+        .register-box-img {
+            position: relative;
+            height: 100%;
+        }
+        .register-box-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .register-box-img .hover {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .register-box-img .hover h4 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .register-box-img .hover p {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .register-form-inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .register-form-inner h3 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .form-control:focus {
+            border-color: #ff7f50; /* Karma Shop primary color */
+            box-shadow: none;
+        }
+        .primary-btn {
+            background-color: #ff7f50; /* Karma Shop button color */
+            border: none;
+            border-radius: 5px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            width: 100%;
+            text-align: center;
+            display: inline-block;
+        }
+        .primary-btn:hover {
+            background-color: #e66b3f; /* Darker shade on hover */
+            color: white;
+            text-decoration: none;
+        }
+        .login-link {
+            display: block;
+            margin-top: 15px;
+            color: #777;
+            font-size: 14px;
+            text-align: center;
+        }
+        .login-link a {
+            color: #ff7f50;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="row">
+            <!-- Left Image Section -->
+            <div class="col-lg-6">
+                <div class="register-box-img">
+                    <img src="https://plus.unsplash.com/premium_photo-1682141028605-b2456e2bab14?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Register Image"> <!-- Replace with your image -->
+                    <div class="hover">
+                        <h4>Déjà inscrit ?</h4>
+                        <p>Connectez-vous pour accéder à votre compte et profiter de nos services.</p>
+                        <a href="{% url 'login' %}" class="primary-btn">Se connecter</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Form Section -->
+            <div class="col-lg-6">
+                <div class="register-form-inner">
+                    <h3>Inscription</h3>
+                    <form method="POST" class="row register_form">
+                        {% csrf_token %}
+                        <div class="col-md-12 form-group">
+                            <input type="text" name="username" class="form-control" placeholder="Nom d'utilisateur" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Nom d'utilisateur'" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" name="password1" class="form-control" placeholder="Mot de passe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mot de passe'" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" name="password2" class="form-control" placeholder="Confirmer le mot de passe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirmer le mot de passe'" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="primary-btn">S'inscrire</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
