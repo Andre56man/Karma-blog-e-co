@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('karma.urls')),  # Inclut toutes les URLs de karma
+    path('blog/',include('blog.urls')),
 ]
 
 # Ajout des fichiers statiques et médias en mode DEBUG
