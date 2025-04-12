@@ -1,21 +1,348 @@
 {% extends 'base/base.html' %}
 {% load static %}
+
 {% block content %}
-   <!-- Banner Area -->
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+    
+    :root {
+        --royal-purple: rgb(205, 118, 42);
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg, var(--royal-purple), rgb(193, 186, 148));
+        padding: 5px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/moccasin.jpg' %}") center/cover;
+        opacity: 0.1;
+    }
+    .banner-area h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 900;
+        font-size: 48px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: relative;
+    }
+    .features-area {
+        background: var(--ivory);
+        padding: 50px 0;
+        background: 
+            linear-gradient(135deg, var(--ivory) 25%, transparent 25%) -50px 0,
+            linear-gradient(225deg, var(--ivory) 25%, transparent 25%) -50px 0,
+            linear-gradient(315deg, var(--ivory) 25%, transparent 25%),
+            linear-gradient(45deg, var(--ivory) 25%, transparent 25%);	
+        background-size: 100px 100px;
+    }
+    .single-features {
+        text-align: center;
+        padding: 20px;
+        background: #FFFFFF;
+        border: 2px solid var(--royal-gold);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
+    }
+    .single-features.animated {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .single-features:hover {
+        transform: translateY(-5px);
+    }
+    .single-features h6 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    .single-features p {
+        color: var(--regal-red);
+        font-size: 14px;
+        font-style: italic;
+    }
+    .f-icon img {
+        filter: brightness(0) saturate(100%) hue-rotate(270deg);
+        height: 60px;
+    }
+    .active-product-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .section-title h1 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 36px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+    .section-title p {
+        color: var(--regal-red);
+        font-style: italic;
+    }
+    .single-product {
+        background: #FFFFFF;
+        border: 2px solid var(--royal-gold);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        margin-bottom: 30px;
+    }
+    .single-product.animated {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .single-product:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(75,0,130,0.1) 0%, rgba(138,43,226,0.1) 100%);
+        z-index: 1;
+    }
+    .single-product:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .single-product img {
+        width: 100%;
+        height: auto;
+        border-bottom: 3px solid var(--royal-gold);
+        transition: transform 0.5s;
+    }
+    .single-product:hover img {
+        transform: scale(1.03);
+    }
+    .product-details {
+        padding: 15px;
+        position: relative;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.85);
+    }
+    .product-details h6 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 18px;
+    }
+    .price h6 {
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .prd-bottom {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    .social-info {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        transition: all 0.3s;
+    }
+    .social-info .lnr {
+        font-size: 18px;
+        margin-right: 5px;
+        color: var(--royal-gold);
+    }
+    .social-info .hover-text {
+        margin: 0;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+    .social-info:hover {
+        transform: translateX(5px);
+    }
+    .social-info:hover .hover-text {
+        color: var(--royal-gold);
+    }
+    .pagination .page-link {
+        background-color: var(--royal-purple);
+        color: var(--royal-gold);
+        border: 1px solid var(--royal-gold);
+        font-family: 'Marcellus SC', serif;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: var(--royal-gold);
+        color: --royal-purple);
+        border-color: var(--royal-gold);
+    }
+    .pagination .page-link:hover {
+        background-color: #8A2BE2;
+        color: #FFFFFF;
+    }
+    .primary-btn {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        text-transform: uppercase;
+        padding: 10px 20px;
+        transition: all 0.3s;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    .primary-btn:hover {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    .royal-crest {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        height: 80px;
+        width: 500px;
+        opacity: 0.8;
+        z-index: 10;
+    }
+    .royal-crest img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .royal-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        padding: 5px 10px;
+        border-radius: 50%;
+        font-weight: bold;
+        z-index: 3;
+        font-family: 'Marcellus SC', serif;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+        background: #FFFFFF;
+        margin: 15% auto;
+        padding: 20px;
+        border: 2px solid var(--royal-gold);
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        text-align: center;
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content h4 {
+        margin-bottom: 20px;
+        color: var(--royal-purple);
+        font-family: 'Cinzel Decorative', cursive;
+    }
+    .modal-content .btn {
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        font-family: 'Marcellus SC', serif;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .modal-content .btn-confirm {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+    }
+    .modal-content .btn-confirm:hover {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        transform: translateY(-2px);
+    }
+    .modal-content .btn-cancel {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        border: 2px solid var(--royal-gold);
+    }
+    .modal-content .btn-cancel:hover {
+        background: #8A2BE2;
+        color: #FFFFFF;
+        transform: translateY(-2px);
+    }
+    /* Animation delays */
+    .features-inner .col-lg-3:nth-child(1) .single-features {
+        transition-delay: 0.1s;
+    }
+    .features-inner .col-lg-3:nth-child(2) .single-features {
+        transition-delay: 0.2s;
+    }
+    .features-inner .col-lg-3:nth-child(3) .single-features {
+        transition-delay: 0.3s;
+    }
+    .features-inner .col-lg-3:nth-child(4) .single-features {
+        transition-delay: 0.4s;
+    }
+    .row .col-lg-3:nth-child(1) .single-product {
+        transition-delay: 0.1s;
+    }
+    .row .col-lg-3:nth-child(2) .single-product {
+        transition-delay: 0.2s;
+    }
+    .row .col-lg-3:nth-child(3) .single-product {
+        transition-delay: 0.3s;
+    }
+    .row .col-lg-3:nth-child(4) .single-product {
+        transition-delay: 0.4s;
+    }
+</style>
+
+<!-- Banner Area -->
 <section class="banner-area">
+    <div class="royal-crest owl-carousel">
+        <img src="{% static 'img/nikenew.jpg' %}" alt="Royal Crest 1">
+        <img src="{% static 'img/moccasin.jpg' %}" alt="Royal Crest 2">
+        <img src="{% static 'img/moca.jpg' %}" alt="Royal Crest 3">
+    </div>
     <div class="container">
         <div class="row fullscreen align-items-center justify-content-start">
             <div class="col-lg-12">
                 <div class="active-banner-slider owl-carousel">
                     <div class="row single-slide align-items-center d-flex">
                         <div class="col-lg-5 col-md-6">
-                            <div class="banner-content">
-                                <h1>{{ featured_product.name }}</h1>
-                                <p>{{ featured_product.description|truncatewords:20 }}</p>
-                                <div class="add-bag d-flex align-items-center">
-                                    <a class="add-btn" href="{% url 'cart'  %}"><span class="lnr lnr-cross"></span></a>
-                                </div>
-                            </div>
+                            <!-- Your banner content here -->
                         </div>
                     </div>
                 </div>
@@ -24,126 +351,229 @@
     </div>
 </section>
 
-    <!-- Features Area -->
-    <section class="features-area section_gap">
-        <div class="container">
-            <div class="row features-inner">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="single-features">
-                        <div class="f-icon"><img src="{% static 'img/features/f-icon1.png' %}" alt=""></div>
-                        <h6>Free Delivery</h6>
-                        <p>Free Shipping on all order</p>
-                    </div>
+<!-- Features Area -->
+<section class="features-area section_gap">
+    <div class="container">
+        <div class="row features-inner">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-features">
+                    <div class="f-icon"><img src="{% static 'img/features/f-icon1.png' %}" alt=""></div>
+                    <h6>Royal Delivery</h6>
+                    <p>Swift and Free to All Corners of the Kingdom</p>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="single-features">
-                        <div class="f-icon"><img src="{% static 'img/features/f-icon2.png' %}" alt=""></div>
-                        <h6>Return Policy</h6>
-                        <p>Free Shipping on all order</p>
-                    </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-features">
+                    <div class="f-icon"><img src="{% static 'img/features/f-icon2.png' %}" alt=""></div>
+                    <h6>Regal Returns</h6>
+                    <p>Graceful Exchanges for Your Satisfaction</p>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="single-features">
-                        <div class="f-icon"><img src="{% static 'img/features/f-icon3.png' %}" alt=""></div>
-                        <h6>24/7 Support</h6>
-                        <p>Free Shipping on all order</p>
-                    </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-features">
+                    <div class="f-icon"><img src="{% static 'img/features/f-icon3.png' %}" alt=""></div>
+                    <h6>24/7 Counsel</h6>
+                    <p>Support Fit for Royalty, Day or Night</p>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="single-features">
-                        <div class="f-icon"><img src="{% static 'img/features/f-icon4.png' %}" alt=""></div>
-                        <h6>Secure Payment</h6>
-                        <p>Free Shipping on all order</p>
-                    </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-features">
+                    <div class="f-icon"><img src="{% static 'img/features/f-icon4.png' %}" alt=""></div>
+                    <h6>Secure Treasury</h6>
+                    <p>Payments Guarded by the Crown for more security</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Product Area -->
-    <section class="owl-carousel active-product-area section_gap">
-        <div class="single-product-slider">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6 text-center">
-                        <div class="section-title">
-                            <h1>Liste des chaussures disponibles</h1>
-                            <p>vos choix nos conceptions</p>
-                        </div>
+<!-- Product Area -->
+<section class="owl-carousel active-product-area section_gap">
+    <div class="single-product-slider">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <div class="section-title">
+                        <h1>Royal Footwear Collection</h1>
+                        <p>Your Desires, Our Craftsmanship</p>
                     </div>
                 </div>
-                <div class="row">
-                    {% for product in latest_products %}
-                        <div class="col-lg-3 col-md-6 searchable-item">
-                            <div class="single-product">
-                                {% if product.image %}
-                                    <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
-                                {% else %}
-                                    <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
-                                {% endif %}
-                                <div class="product-details">
-                                    <h6>{{ product.name }}</h6>
-                                    <div class="price">
-                                        <h6>${{ product.price }}</h6>
-                                    </div>
-                                    <div class="prd-bottom">
-                                        {% if user.is_authenticated and not user.is_staff %}
-                                            <a href="{% url 'single-product' product.id %}" class="social-info">
-                                                <span class="lnr lnr-move"></span>
-                                                <p class="hover-text">View More</p>
-                                            </a>
-                                        {% endif %}
-                                        {% if user.is_staff %}
-                                            <a href="{% url 'product_edit' product.id %}" class="social-info">
-                                                <span class="lnr lnr-pencil"></span>
-                                                <p class="hover-text">Modifier</p>
-                                            </a>
-                                            <a href="{% url 'product_delete' product.id %}" class="social-info" onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?');">                                                <span class="lnr lnr-trash"></span>
-                                                <p class="hover-text">Supprimer</p>
-                                            </a>
-                                        {% endif %}
-                                    </div>
+            </div>
+            <div class="row">
+                {% for product in latest_products %}
+                    <div class="col-lg-3 col-md-6 searchable-item">
+                        <div class="single-product">
+                            {% if product.is_featured %}
+                                <div class="royal-badge">★</div>
+                            {% endif %}
+                            {% if product.image %}
+                                <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
+                            {% endif %}
+                            <div class="product-details">
+                                <h6>{{ product.name }}</h6>
+                                <div class="price">
+                                    <h6>{{ product.price }}fcfa</h6>
+                                </div>
+                                <div class="prd-bottom">
+                                    <a href="{% url 'single-product' product.id %}" class="social-info">
+                                        <span class="lnr lnr-move"></span>
+                                        <p class="hover-text">voir plus</p>
+                                    </a>
+                                    {% if user.is_staff %}
+                                        <a href="{% url 'product_edit' product.id %}" class="social-info">
+                                            <span class="lnr lnr-pencil"></span>
+                                            <p class="hover-text">modifier</p>
+                                        </a>
+                                        <a href="#" class="social-info delete-product" data-product-id="{{ product.id }}">
+                                            <span class="lnr lnr-trash"></span>
+                                            <p class="hover-text">supprimer</p>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                    {% empty %}
-                        <p>No products available yet.</p>
-                    {% endfor %}
-                </div>
-                <!-- Pagination -->
-                {% if latest_products.paginator.num_pages > 1 %}
-                    <div class="row justify-content-center mt-4">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                {% if latest_products.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ latest_products.previous_page_number }}" aria-label="Previous">
-                                            <span aria-hidden="true">«</span>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% for num in latest_products.paginator.page_range %}
-                                    <li class="page-item {% if latest_products.number == num %}active{% endif %}">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                    </li>
-                                {% endfor %}
-                                {% if latest_products.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ latest_products.next_page_number }}" aria-label="Next">
-                                            <span aria-hidden="true">»</span>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
                     </div>
-                {% endif %}
-                {% if user.is_staff %}
-                    <div class="text-center mt-4">
-                        <a href="{% url 'product_add' %}" class="primary-btn">Ajouter un produit</a>
-                    </div>
-                {% endif %}
+                {% empty %}
+                    <p>No treasures available in the royal vault yet.</p>
+                {% endfor %}
             </div>
+            <!-- Pagination -->
+            {% if latest_products.paginator.num_pages > 1 %}
+                <div class="row justify-content-center mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if latest_products.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ latest_products.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for num in latest_products.paginator.page_range %}
+                                <li class="page-item {% if latest_products.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if latest_products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ latest_products.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+            {% if user.is_staff %}
+                <div class="text-center mt-4">
+                    <a href="{% url 'product_add' %}" class="primary-btn">Ajouter un Produit</a>
+                </div>
+            {% endif %}
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h4>Confirm Deletion</h4>
+        <p>Are you sure you wish to banish this item from the treasury?</p>
+        <button class="btn btn-confirm" id="confirmDelete">Yes, Delete</button>
+        <button class="btn btn-cancel" id="cancelDelete">Cancel</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize royal crest carousel
+    $('.royal-crest').owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        dots: false,
+        nav: false,
+        animateOut: 'fadeOut',
+        animateIn: 'fadeIn',
+        smartSpeed: 1000
+    });
+
+    // Function to check if element is in viewport
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+            rect.bottom >= 0
+        );
+    }
+
+    // Function to animate elements when they come into view
+    function animateElements() {
+        document.querySelectorAll('.single-features, .single-product').forEach(element => {
+            if (isInViewport(element)) {
+                element.classList.add('animated');
+            }
+        });
+    }
+
+    // Run on load and scroll
+    animateElements();
+    window.addEventListener('scroll', animateElements);
+    window.addEventListener('resize', animateElements);
+
+    // Modal and deletion logic
+    const deleteLinks = document.querySelectorAll('.delete-product');
+    const modal = document.getElementById('deleteModal');
+    const confirmButton = document.getElementById('confirmDelete');
+    const cancelButton = document.getElementById('cancelDelete');
+    let productId = '';
+
+    deleteLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            productId = this.getAttribute('data-product-id');
+            modal.style.display = 'block';
+        });
+    });
+
+    cancelButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    confirmButton.addEventListener('click', function() {
+        fetch("{% url 'product_delete' 0 %}".replace('0', productId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                const productElement = document.querySelector(`.delete-product[data-product-id="${productId}"]`).closest('.single-product');
+                productElement.remove();
+                modal.style.display = 'none';
+                alert('Item banished from the treasury.');
+            } else {
+                throw new Error('Failed to delete product');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while banishing the item.');
+            modal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

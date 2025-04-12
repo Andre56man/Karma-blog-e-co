@@ -1,54 +1,210 @@
-{%  extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
-{% block content %}
 
-    <!-- Start Banner Area -->
-    <section class="banner-area organic-breadcrumb">
-        <div class="container">
-            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-                <div class="col-first">
-                    <h1>votre panier</h1>
-                    <nav class="d-flex align-items-center">
-                    </nav>
-                </div>
+{% block content %}
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+    
+    :root {
+        --royal-purple:rgb(143, 83, 61);
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg, var(--royal-gold),rgb(99, 74, 58));
+        color: var(--royal-gold);
+        padding: 60px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/royal-pattern.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    .breadcrumb-banner h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 700;
+        font-size: 36px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: var(--royal-gold);
+    }
+    .cart-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .cart-area h1 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 32px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 2px solid var(--royal-gold);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .table thead {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        font-family: 'Marcellus SC', serif;
+    }
+    .table th {
+        padding: 15px;
+        text-align: left;
+    }
+    .table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(75, 0, 130, 0.1);
+        font-family: 'Marcellus SC', serif;
+    }
+    .table tr:last-child td {
+        border-bottom: none;
+    }
+    .table tbody tr:hover {
+        background-color: rgba(255, 215, 0, 0.1);
+    }
+    .table tbody tr:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+    .table tbody tr:nth-child(odd) {
+        background-color: rgba(248, 241, 233, 0.7);
+    }
+    .table tfoot {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        font-weight: bold;
+    }
+    .primary-btn {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        text-transform: uppercase;
+        padding: 12px 30px;
+        transition: all 0.3s;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-right: 15px;
+        display: inline-block;
+        margin-top: 20px;
+    }
+    .primary-btn:hover {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+    }
+    .empty-cart {
+        font-family: 'Marcellus SC', serif;
+        color: var(--regal-red);
+        font-size: 18px;
+        font-style: italic;
+    }
+    .royal-seal {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 80px;
+        opacity: 0.7;
+    }
+</style>
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Votre panier</h1>
+                <nav class="d-flex align-items-center">
+                    <!-- Navigation if needed -->
+                </nav>
             </div>
         </div>
-    </section>
-    <!-- End Banner Area -->
+    </div>
+</section>
+<!-- End Banner Area -->
 
-    <section class="cart-area section_gap">
-        <div class="container">
-            <h1>Votre panier</h1>
-            {% if cart_items %}
-                <table class="table">
-                    <thead>
+<section class="cart-area section_gap">
+    <div class="container">
+        <h1>Votre panier</h1>
+        {% if cart_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Sous-total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
                         <tr>
-                            <th>Produit</th>
-                            <th>Quantité</th>
-                            <th>Prix unitaire</th>
-                            <th>Sous-total</th>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.product.price }}fcfa</td>
+                            <td>{{ item.subtotal }}fcfa</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in cart_items %}
-                            <tr>
-                                <td>{{ item.product.name }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>${{ item.product.price }}</td>
-                                <td>${{ item.subtotal }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tr>
-                            <td colspan="3"><strong>Total</strong></td>
-                            <td><strong>${{ total }}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="3"><strong>Total</strong></td>
+                        <td><strong>{{ total }}fcfa</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="cart-actions">
                 <a href="{% url 'checkout' %}" class="primary-btn">Passer la commande</a>
                 <a href="{% url 'index' %}" class="primary-btn">Retournez</a>
-            {% else %}
-                <p>Votre panier est vide.</p>
-            {% endif %}
-        </div>
-    </section>
+            </div>
+        {% else %}
+            <p class="empty-cart">Votre panier est vide.</p>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate table rows on load
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                row.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                row.style.opacity = '1';
+                row.style.transform = 'translateX(0)';
+            }, 100);
+        });
+        
+        // Animate total row if it exists
+        const totalRow = document.querySelector('tfoot tr');
+        if (totalRow) {
+            totalRow.style.opacity = '0';
+            setTimeout(() => {
+                totalRow.style.transition = 'all 0.5s ease 0.3s';
+                totalRow.style.opacity = '1';
+            }, 100);
+        }
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de votre commande</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+
+        :root {
+            --royal-purple: rgb(143, 83, 61);
+            --royal-gold: #FFD700;
+            --ivory: #F8F1E9;
+        }
+
+        body {
+            font-family: 'Marcellus SC', serif;
+            background: var(--ivory);
+            margin: 0;
+            padding: 0;
+            color: var(--royal-purple);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border: 3px solid var(--royal-gold);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--royal-purple);
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .order-details h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+
+        .order-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-details th, .order-details td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--royal-gold);
+        }
+
+        .order-details th {
+            background: rgba(75, 0, 130, 0.1);
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            color: var(--royal-purple);
+        }
+
+        .footer a {
+            color: var(--royal-gold);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Commande confirmée !</h1>
+        </div>
+        <div class="content">
+            <p>Cher(e) {{ user.username }},</p>
+            <p>Merci pour votre achat sur Karma Shop. Votre commande a été enregistrée avec succès.</p>
+            
+            <div class="order-details">
+                <h2>Détails de la commande</h2>
+                <p>Numéro de commande: <strong>#{{ order.id }}</strong></p>
+                <table>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix</th>
+                    </tr>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.subtotal|floatformat:2 }} FCFA</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p>Sous-total: {{ order.total|floatformat:2 }} FCFA</p>
+                <p>Frais de livraison: {{ order.shipping_cost|floatformat:2 }} FCFA</p>
+                <p class="total">Total: {{ order.grand_total|floatformat:2 }} FCFA</p>
+            </div>
+
+            <p>Un email de confirmation a été envoyé à <strong>{{ user.email }}</strong>. Veuillez vérifier votre boîte de réception ou votre dossier de courriers indésirables.</p>
+            <p>Pour toute question, contactez-nous via notre <a href="{% url 'contact' %}">page de contact</a>.</p>
+        </div>
+        <div class="footer">
+            <p>© {{ year }} Karma Shop. Tous droits réservés.</p>
+            <p><a href="{% url 'index' %}">Retour à la boutique</a></p>
+        </div>
+    </div>
+</body>
+</html>

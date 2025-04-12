@@ -1,28 +1,355 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block content %}
- <!-- Start Banner Area -->
- <section class="banner-area organic-breadcrumb">
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+    
+    :root {
+        --royal-purple: #4B0082;
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg,rgb(225, 147, 31),rgb(225, 147, 31));
+        color: var(--royal-gold);
+        padding: 60px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/royal-pattern.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    .breadcrumb-banner h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 700;
+        font-size: 36px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: var(--royal-gold);
+    }
+    .checkout-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .checkout-area h1 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+    }
+    .checkout-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        border: 2px solid var(--royal-gold);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        display: block;
+        margin-bottom: 5px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid var(--royal-purple);
+        border-radius: 5px;
+        font-family: 'Marcellus SC', serif;
+    }
+    .shipping-title {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--royal-purple);
+        margin: 30px 0 15px;
+        border-bottom: 1px solid var(--royal-gold);
+        padding-bottom: 5px;
+    }
+    .primary-btn {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        padding: 12px 30px;
+        font-weight: bold;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    .primary-btn:hover {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+    }
+    .royal-seal {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 80px;
+        opacity: 0.7;
+    }
+    .user-info {
+        background: rgba(255, 215, 0, 0.1);
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    /* Styles pour la section des coordonnées bancaires */
+    .card-details {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 5px;
+        border: 1px solid var(--royal-gold);
+    }
+    .card-details.active {
+        display: block;
+    }
+</style>
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
                 <h1>Checkout</h1>
-                <nav class="d-flex align-items-center">
-                    <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="{% url 'checkout' %}">Checkout</a>
-                </nav>
+                
             </div>
         </div>
     </div>
 </section>
 <!-- End Banner Area -->
-    <section class="checkout-area section_gap">
-        <div class="container">
-            <h1>Confirmation de la commande</h1>
-            <form method="POST">
-                {% csrf_token %}
-                <p>Voulez-vous confirmer votre commande ?</p>
-                <button type="submit" class="primary-btn">Confirmer</button>
-            </form>
+
+<section class="checkout-area section_gap">
+    <div class="container">
+        <h1>Confirmation de la commande</h1>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="checkout-form">
+                    <form method="POST" id="checkout-form">
+                        {% csrf_token %}
+                        
+                        <div class="user-info">
+                            <h3>Informations client</h3>
+                            <p><strong>Nom :</strong> {{ user.username }}</p>
+                            <p><strong>Email :</strong> {{ user.email }}</p>
+                        </div>
+                        
+                        <h3 class="shipping-title">Adresse de livraison</h3>
+                        
+                        <div class="form-group">
+                            <label for="id_address">Adresse complète</label>
+                            <input type="text" class="form-control" id="id_address" name="address" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_city">Ville</label>
+                                    <input type="text" class="form-control" id="id_city" name="city" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_postcode">Code postal</label>
+                                    <input type="text" class="form-control" id="id_postcode" name="postcode" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_country">Pays</label>
+                            <select class="form-control" id="id_country" name="country" required>
+                                <option value="">Sélectionnez un pays</option>
+                                <option value="CI">Côte d'Ivoire</option>
+                                <option value="FR">France</option>
+                                <option value="BE">Belgique</option>
+                                <option value="CH">Suisse</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_phone">Téléphone</label>
+                            <input type="tel" class="form-control" id="id_phone" name="phone" required>
+                        </div>
+                        
+                        <h3 class="shipping-title">Méthode de livraison</h3>
+                        
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping_method" id="standard" value="standard" checked>
+                                <label class="form-check-label" for="standard">
+                                    Livraison standard (3-5 jours) - 2000fcfa
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping_method" id="express" value="express">
+                                <label class="form-check-label" for="express">
+                                    Livraison express (1-2 jours) - 5000fcfa
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Champ caché pour la méthode de paiement -->
+                        <input type="hidden" name="payment_method" id="payment_method_hidden">
+                        
+                        <button type="submit" class="primary-btn">Confirmer la commande</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="checkout-form">
+                    <h3>Résumé de la commande</h3>
+                    <div class="order-summary">
+                        {% for item in cart_items %}
+                            <div class="d-flex justify-content-between">
+                                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                                <span>{{ item.subtotal|floatformat:2 }}fcfa</span>
+                            </div>
+                        {% endfor %}
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Sous-total</strong>
+                            <strong>{{ cart_total|floatformat:2 }}fcfa</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <strong>Livraison</strong>
+                            <strong id="shipping-cost">2000fcfa</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Total</strong>
+                            <strong id="total-cost">{{ cart_total|add:2000|floatformat:2 }}fcfa</strong>
+                        </div>
+                    </div>
+
+                    <!-- Moyens de paiement -->
+                    <h3 class="shipping-title" style="margin-top: 30px;">Moyen de paiement</h3>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="orange_money" value="orange_money" checked>
+                            <label class="form-check-label" for="orange_money">
+                            <img src="{% static 'img/orange.png' %}" alt="Orange Money" style="width: 20px; height: auto; margin-right: 10px;">
+
+                                Orange Money
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="mtn_money" value="mtn_money">
+                            <label class="form-check-label" for="mtn_money">
+                            <img src="{% static 'img/wave.png' %}" alt="Orange Money" style="width: 20px; height: auto; margin-right: 10px;">
+
+                                Wave Money
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="card" value="card">
+                            <label class="form-check-label" for="card">
+                            <img src="{% static 'img/visa.png' %}" alt="Orange Money" style="width: 20px; height: auto; margin-right: 10px;">
+
+                                Carte bancaire (Visa/Mastercard)
+                            </label>
+                        </div>
+                        <!-- Section des coordonnées bancaires -->
+                        <div class="card-details" id="card-details">
+                            <div class="form-group">
+                                <label for="card_number">Numéro de carte</label>
+                                <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="card_expiry">Date d'expiration</label>
+                                        <input type="text" class="form-control" id="card_expiry" name="card_expiry" placeholder="MM/AA">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="card_cvv">CVV</label>
+                                        <input type="text" class="form-control" id="card_cvv" name="card_cvv" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="card_holder">Nom du titulaire</label>
+                                <input type="text" class="form-control" id="card_holder" name="card_holder" placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="cash_on_delivery" value="cash_on_delivery">
+                            <label class="form-check-label" for="cash_on_delivery">
+                                <img src="{% static 'img/mtnn.png' %}" alt="Orange Money" style="width: 20px; height: auto; margin-right: 10px;">
+
+                                Paiement à la livraison
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update shipping cost when method changes
+        const shippingMethods = document.querySelectorAll('input[name="shipping_method"]');
+        const cartTotal = parseFloat({{ cart_total }});
+        
+        shippingMethods.forEach(method => {
+            method.addEventListener('change', function() {
+                const shippingCost = this.value === 'standard' ? 2000 : 5000;
+                document.getElementById('shipping-cost').textContent = shippingCost.toFixed(2) + 'fcfa';
+                
+                // Calculate and update total
+                const total = cartTotal + shippingCost;
+                document.getElementById('total-cost').textContent = total.toFixed(2) + 'fcfa';
+            });
+        });
+        
+        // Pre-fill phone if available in user profile
+        {% if user.profile.phone %}
+            document.getElementById('id_phone').value = '{{ user.profile.phone }}';
+        {% endif %}
+
+        // Gestion des moyens de paiement et affichage des coordonnées bancaires
+        const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+        const cardDetails = document.getElementById('card-details');
+        const paymentMethodHidden = document.getElementById('payment_method_hidden');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('change', function() {
+                // Mettre à jour le champ caché pour la soumission du formulaire
+                paymentMethodHidden.value = this.value;
+                
+                // Afficher/masquer les coordonnées bancaires
+                if (this.value === 'card') {
+                    cardDetails.classList.add('active');
+                } else {
+                    cardDetails.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialiser l'état du champ caché avec la méthode par défaut
+        paymentMethodHidden.value = document.querySelector('input[name="payment_method"]:checked').value;
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <section class="comment-area section_gap" style="background-color: #f8f1e9; padding: 50px 0;">
+        <div class="container">
+            <!-- Start Banner Area -->
+            <section class="banner-area organic-breadcrumb" style="background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);">
+                <div class="container">
+                    <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                        <div class="col-first">
+                            <a href="{% url 'add_comment' article_id=article.id %}" class="btn royal-btn">Ajouter un commentaire</a>
+                                                        <nav class="d-flex align-items-center">
+                                <span style="color: white;">Article: {{ article.title }}</span>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End Banner Area -->
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="comment-form" style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border: 1px solid gold; margin-top: 30px;">
+                        <h4 style="color: #1a2a6c; border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 20px;">
+                            Votre commentaire
+                        </h4>
+                        
+                        <form method="POST" action="{% url 'add_comment' slug=article.slug %}"><form method="POST" action="{% url 'add_comment' article_id=article.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea name="content" class="form-control" style="border: 1px solid #b21f1f; min-height: 150px;" 
+                                          placeholder="Écrivez votre commentaire ici..." required></textarea>
+                            </div>
+                            <div class="form-group text-right">
+                                <button type="submit" class="btn" style="background: linear-gradient(to right, #1a2a6c, #b21f1f); color: gold; border: none; padding: 10px 25px; font-weight: bold;">
+                                    Publier le commentaire
+                                </button>
+                                <a href="{% url 'single-blog' article_title=article.title %}" class="btn" style="background: linear-gradient(to right, #b21f1f, #1a2a6c); color: gold; border: none; padding: 10px 25px; font-weight: bold; margin-left: 10px;">
+                                    Annuler
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

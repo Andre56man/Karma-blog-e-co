@@ -3,14 +3,20 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Product, Order, OrderItem, UserProfile
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse, HttpResponse
+from django.core.files.storage import FileSystemStorage
+from .models import Product, Order, OrderItem, UserProfile, BlogPost, Comment, Article
+import logging
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 def is_admin(user):
     return user.is_staff
-
-
 
 def categorie(request):
     return render(request, 'category.html')
@@ -19,39 +25,156 @@ def singleproduct(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'single-product.html', {'product': product})
 
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+from .models import Product, Order, OrderItem
+from datetime import datetime
+
+@login_required
 def checkout(request):
     cart = request.session.get('cart', {})
     if not cart:
         messages.error(request, 'Votre panier est vide.')
         return redirect('cart')
     
+    # Ensure cart keys are strings
+    cart = {str(k): v for k, v in cart.items()}
+    products = Product.objects.filter(id__in=cart.keys())
+    cart_items = [
+        {'product': product, 'quantity': cart[str(product.id)], 'subtotal': product.price * cart[str(product.id)]}
+        for product in products
+    ]
+    total = sum(item['subtotal'] for item in cart_items)
+    
     if request.method == 'POST':
-        order = Order.objects.create(user=request.user, total=0)
-        total = 0
-        for product_id, quantity in cart.items():
-            product = Product.objects.get(id=product_id)
-            if product.stock >= quantity:
-                price = product.price * quantity
-                total += price
-                OrderItem.objects.create(
-                    order=order,
-                    product=product,
-                    quantity=quantity,
-                    price=product.price
-                )
-                product.stock -= quantity
-                product.save()
-            else:
-                messages.error(request, f"Stock insuffisant pour {product.name}")
-                return redirect('cart')
+        # Récupérer les données du formulaire
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        postcode = request.POST.get('postcode')
+        country = request.POST.get('country')
+        phone = request.POST.get('phone')
+        shipping_method = request.POST.get('shipping_method', 'standard')
+        payment_method = request.POST.get('payment_method', 'cash_on_delivery')
         
-        order.total = total
-        order.is_completed = True
-        order.save()
-        del request.session['cart']
+        # Valider les champs requis
+        if not all([address, city, postcode, country, phone]):
+            messages.error(request, 'Veuillez remplir tous les champs obligatoires.')
+            return render(request, 'checkout.html', {
+                'cart_items': cart_items,
+                'cart_total': total,
+                'user': request.user
+            })
+        
+        # Calculer les frais de livraison
+        shipping_cost = 2000.00 if shipping_method == 'standard' else 5000.00
+        
+        # Créer la commande
+        order = Order.objects.create(
+            user=request.user,
+            total=0,
+            address=address,
+            city=city,
+            postcode=postcode,
+            country=country,
+            phone=phone,
+            shipping_method=shipping_method,
+            payment_method=payment_method,
+            shipping_cost=shipping_cost,
+            is_completed=False
+        )
+        
+        order_total = 0
+        
+        # Ajouter les articles à la commande
+        try:
+            for product_id, quantity in cart.items():
+                try:
+                    product = Product.objects.get(id=product_id)
+                    if product.stock >= quantity:
+                        price = product.price * quantity
+                        order_total += price
+                        OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            quantity=quantity,
+                            price=product.price,
+                            subtotal=price  # Set here, save method will override if needed
+                        )
+                        product.stock -= quantity
+                        product.save()
+                    else:
+                        messages.error(request, f"Stock insuffisant pour {product.name}")
+                        order.delete()
+                        return redirect('cart')
+                except Product.DoesNotExist:
+                    messages.error(request, f"Produit introuvable : ID {product_id}")
+                    order.delete()
+                    return redirect('cart')
+            
+            # Mettre à jour le total
+            order.total = order_total
+            order.is_completed = True
+            order.save()
+        
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la création de la commande : {e}")
+            order.delete()
+            return redirect('cart')
+        
+        # Envoyer l'email de confirmation
+        if hasattr(settings, 'DEFAULT_FROM_EMAIL'):
+            try:
+                subject = f"Confirmation de votre commande #{order.id}"
+                html_message = render_to_string('order_confirmation.html', {
+                    'user': request.user,
+                    'order': order,
+                    'order_items': order.orderitem_set.all(),
+                    'shipping_cost': shipping_cost,
+                    'year': datetime.now().year,
+                })
+                plain_message = (
+                    f"Cher(e) {request.user.username},\n\n"
+                    f"Merci pour votre achat. Votre commande #{order.id} a été enregistrée.\n"
+                    f"Total: {order.grand_total():.2f} FCFA\n\n"
+                    f"Karma Shop"
+                )
+                
+                send_mail(
+                    subject,
+                    plain_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [request.user.email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Erreur lors de l'envoi de l'email: {e}")
+                messages.warning(request, "Commande passée, mais l'email n'a pas pu être envoyé.")
+        else:
+            messages.warning(request, "Email non configuré. Commande passée sans confirmation par email.")
+        
+        # Vider le panier
+        if 'cart' in request.session:
+            del request.session['cart']
+            request.session.modified = True
+        
         messages.success(request, 'Commande passée avec succès!')
-        return redirect('confirmation')
-    return render(request, 'checkout.html')
+        return render(request, 'confirmation.html', {
+            'order': order,
+            'user': request.user,
+            'shipping_cost': shipping_cost
+        })
+    
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'cart_total': total,
+        'user': request.user
+    })
 
 def cart(request):
     cart = request.session.get('cart', {})
@@ -73,9 +196,28 @@ def elements(request):
     return render(request, 'elements.html')
 
 def blog(request):
-    return render(request, 'blog.html')
+    latest_posts = BlogPost.objects.all().order_by('-created_at')
+    featured_post = latest_posts.first()
+    return render(request, 'blog.html', {'latest_posts': latest_posts, 'featured_post': featured_post})
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        full_message = f"Message de : {name} ({email})\n\n{message}"
+
+        try:
+            send_mail(subject, full_message, email, ['ton.email@gmail.com'])  # destinataire
+            messages.success(request, 'Votre message a bien été envoyé.')
+        except Exception as e:
+            print(f"Erreur d'envoi: {e}")
+            messages.error(request, "Une erreur est survenue, réessayez plus tard.")
+
+        return redirect('contact')
+
     return render(request, 'contact.html')
 
 def singleblog(request):
@@ -97,28 +239,75 @@ def login_view(request):
             messages.error(request, 'Invalid credentials')
     return render(request, 'login.html')
 
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.shortcuts import render, redirect
+from .models import UserProfile
+
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
         email = request.POST['email']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+
         if password1 != password2:
-            messages.error(request, "Passwords do not match.")
+            messages.error(request, "Les mots de passe ne correspondent pas.")
             return render(request, 'register.html')
+
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username is already taken.")
+            messages.error(request, "Ce nom d'utilisateur est déjà pris.")
             return render(request, 'register.html')
+
         if User.objects.filter(email=email).exists():
-            messages.error(request, "Email is already registered.")
+            messages.error(request, "Cet email est déjà enregistré.")
             return render(request, 'register.html')
+
         user = User.objects.create_user(username=username, email=email, password=password1)
-        messages.success(request, "Registration successful! You can now log in.")
+        user.is_active = False  # Empêche la connexion avant activation
+        user.save()
+
+        # Récupère le profil lié au user via le signal
+        profile = user.userprofile  
+        activation_link = f"http://localhost:8000{reverse('activate_account', args=[str(profile.activation_token)])}"
+
+        # Envoie de l'email d'activation
+        send_mail(
+            subject="Activation de votre compte Karma Shop",
+            message=f"Bonjour {username},\n\nMerci pour votre inscription ! Veuillez activer votre compte en cliquant sur ce lien :\n\n{activation_link}\n\nSi vous n’avez pas créé de compte, ignorez cet email.",
+            from_email="noreply@karma-shop.com",
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Inscription réussie ! Vérifiez votre email pour activer votre compte.")
         return redirect('login')
+
     return render(request, 'register.html')
 
+
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
 def password_reset(request):
-    return render(request, 'password_reset.html')
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(
+                request=request, 
+                email_template_name='password_reset_email.html'
+            )
+            messages.success(request, "Si un compte avec cet email existe, un lien de réinitialisation a été envoyé.")
+            return redirect('password_reset_done')  # Redirige vers la page de confirmation
+        else:
+            messages.error(request, "L'email n'est pas valide.")
+    else:
+        form = PasswordResetForm()
+    return render(request, 'password_reset.html', {'form': form})
+
 
 @login_required
 @user_passes_test(is_admin)
@@ -159,47 +348,29 @@ def add_to_cart(request, product_id):
 
 def activate_account(request, token):
     try:
-        user_profile = UserProfile.objects.get(activation_token=token)
-        user = user_profile.user
+        profile = UserProfile.objects.get(activation_token=token)
+        user = profile.user
         user.is_active = True
         user.save()
-        messages.success(request, "Compte activé avec succès.")
+        profile.is_active = True
+        profile.save()
+        messages.success(request, "Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter.")
         return redirect("login")
     except UserProfile.DoesNotExist:
-        messages.error(request, "Lien d'activation invalide.")
+        messages.error(request, "Lien d'activation invalide ou expiré.")
         return redirect("register")
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-from .models import Order
 
 @login_required
 def historique(request):
-    # Récupérer les informations de l'utilisateur et ses commandes
     all_orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    
-    # Pagination (10 commandes par page)
     paginator = Paginator(all_orders, 10)
     page_number = request.GET.get('page')
     orders = paginator.get_page(page_number)
-    
     context = {
         'user': request.user,
         'orders': orders,
     }
     return render(request, 'historique.html', context)
-
-@login_required
-def order_detail(request, order_name):
-    order = get_object_or_404(Order, id=order_name, user=request.user)
-    context = {
-        'order': order,
-    }
-    return render(request, 'order_detail.html', context)
-
-
-
 
 @login_required
 def order_detail(request, order_id):
@@ -209,35 +380,17 @@ def order_detail(request, order_id):
     }
     return render(request, 'order_detail.html', context)
 
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Product
-from django.core.exceptions import ValidationError
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Product
-from django.core.exceptions import ValidationError
-from django.http import HttpResponseRedirect
-
 def index(request):
-    # Récupérer le produit vedette (par exemple, le plus récent)
     featured_product = Product.objects.order_by('-created_at').first()
-    
-    # Récupérer tous les produits avec pagination
     latest_products = Product.objects.order_by('-created_at')
-    paginator = Paginator(latest_products,8)  # 6 produits par page
+    paginator = Paginator(latest_products, 8)
     page = request.GET.get('page')
-    
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
         products = paginator.page(1)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-    
     return render(request, 'index.html', {
         'featured_product': featured_product,
         'latest_products': products,
@@ -301,31 +454,194 @@ def product_add_edit(request, product_id=None):
             'form_data': request.POST,
         })
     
-    return render(request, 'add_product.html', {
-        'product': product,
-    })
+    return render(request, 'add_product.html', {'product': product})
 
-@login_required
 @login_required
 def product_delete(request, product_id):
     product = get_object_or_404(Product, id=product_id, added_by=request.user)
     if request.method == 'POST':
         product.delete()
-        return redirect('index')  # Redirige vers la page d'index
+        return redirect('index')
     return render(request, 'product_confirm_delete.html', {'product': product})
 
 def product_list(request):
     products = Product.objects.all()
-    paginator = Paginator(products, 8)  # 6 produits par page
+    paginator = Paginator(products, 8)
     page = request.GET.get('page')
-    
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
         products = paginator.page(1)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-    
     return render(request, 'product_list.html', {'products': products})
 
+def single_blog(request, blog_name):
+    post = get_object_or_404(BlogPost, title=blog_name)  # Changé de id à title
+    context = {'post': post}
+    return render(request, 'single_blog.html', context)
+
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    # Ensure only the comment's author can delete it
+    if request.user != comment.user:
+        messages.error(request, "You do not have permission to banish this commentary!")
+        return redirect('blog_detaille', id=comment.blog_post.id)
+
+    if request.method == 'POST':
+        blog_post_id = comment.blog_post.id
+        comment.delete()
+        messages.success(request, "Your royal commentary has been banished from the archives!")
+        return redirect('blog_detaille', id=blog_post_id)
+    
+    # For GET requests, you might want to show a confirmation page
+    return render(request, 'confirm_delete.html', {'comment': comment})
+
+def save_images(request):
+    if request.method == 'POST':
+        image_urls = {}
+        for key, file in request.FILES.items():
+            fs = FileSystemStorage()
+            filename = fs.save(file.name, file)
+            image_urls[key] = fs.url(filename)
+        return JsonResponse({'imageUrls': image_urls})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def blog_detail(request, id):  # Changed from blog_title to id
+    post = get_object_or_404(BlogPost, id=id)  # Fetch by id instead of title
+    return render(request, 'blog_detaille.html', {'post': post})
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def blog_edit(request, id):  # Gardé avec id pour l’édition
+    post = get_object_or_404(BlogPost, id=id)
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.excerpt = request.POST.get('excerpt')
+        post.content = request.POST.get('content')
+        if 'image' in request.FILES:
+            post.image = request.FILES['image']
+        post.save()
+        return redirect('blog')
+    return render(request, 'blog_edit.html', {'post': post})
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def blog_delete(request, id):
+    post = get_object_or_404(BlogPost, id=id)
+    if request.method == 'POST':
+        post.delete()
+        return JsonResponse({'status': 'success'}, status=200)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def blog_add(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        excerpt = request.POST.get('excerpt')
+        content = request.POST.get('content')
+        image = request.FILES.get('image') if 'image' in request.FILES else None
+        post = BlogPost(
+            title=title,
+            excerpt=excerpt,
+            content=content,
+            image=image,
+            author=request.user
+        )
+        post.save()
+        return redirect('blog')
+    return render(request, 'blog_add.html')
+
+@login_required
+def confirmation(request):
+    order = Order.objects.filter(user=request.user, is_completed=True).order_by('-created_at').first()
+    return render(request, 'confirmation.html', {
+        'order': order,
+        'user': request.user,
+        'shipping_cost': order.shipping_cost if order else 2000
+    })
+
+def payment_webhook(request):
+    if request.method == 'POST':
+        try:
+            order = Order.objects.get(payment_id=request.POST.get('payment_id'))
+            if order.status != 'confirmed':
+                order.status = 'confirmed'
+                order.save()
+                send_order_confirmation_email(request, order)
+        except Order.DoesNotExist:
+            logger.error(f"Commande non trouvée pour le payment_id: {request.POST.get('payment_id')}")
+        return HttpResponse(status=200)
+    return HttpResponse(status=400)
+
+@login_required
+def resend_confirmation_email(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    try:
+        send_order_confirmation_email(request, order)
+        messages.success(request, "L'email de confirmation a été renvoyé avec succès.")
+    except Exception as e:
+        logger.error(f"Erreur lors du renvoi de l'email de confirmation: {e}")
+        messages.error(request, "Une erreur est survenue lors de l'envoi de l'email.")
+    return redirect('order_confirmation', order_id=order.id)
+
+def send_order_confirmation_email(request, order):
+    subject = f'{settings.EMAIL_SUBJECT_PREFIX} Confirmation de commande #{order.id}'
+    context = {
+        'order': order,
+        'user': request.user,
+        'site_url': settings.SITE_URL,
+        'support_email': settings.SUPPORT_EMAIL
+    }
+    html_message = render_to_string('emails/order_confirmation.html', context)
+    text_message = render_to_string('emails/order_confirmation.txt', context)
+    email = EmailMultiAlternatives(
+        subject,
+        text_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [request.user.email],
+        reply_to=[settings.SUPPORT_EMAIL]
+    )
+    email.attach_alternative(html_message, "text/html")
+    email.send(fail_silently=False)
+    logger.info(f"Email de confirmation envoyé pour la commande #{order.id} à {request.user.email}")
+
+@login_required
+def add_comment(request, blog_id):
+    if request.method == 'POST':
+        post = get_object_or_404(BlogPost, id=blog_id)
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(
+                blog_post=post,
+                user=request.user,
+                content=content
+            )
+            messages.success(request, "Your royal commentary has been inscribed!")
+        return redirect('blog_detaille', id=post.id)  # Redirect back to blog_detail with id
+    return redirect('index')
+
+@login_required
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    # Ensure only the comment's author can edit it
+    if request.user != comment.user:
+        messages.error(request, "You do not have permission to amend this commentary.")
+        return redirect('blog_detaille', id=comment.blog_post.id)
+
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            comment.content = content
+            comment.save()
+            messages.success(request, "Your royal commentary has been amended!")
+            return redirect('blog_detaille', id=comment.blog_post.id)
+    
+    # Render the edit form for GET requests
+    return render(request, 'edit_comment.html', {'comment': comment})
 

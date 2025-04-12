@@ -13,7 +13,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ product.name }}</h5>
                                 <p class="card-text">{{ product.description }}</p>
-                                <p class="card-text">Prix : {{ product.price }} €</p>
+                                <p class="card-text">Prix : {{ product.price }} fcfa</p>
                                 <p class="card-text">Stock : {{ product.stock }}</p>
                                 {% if request.user.is_authenticated %}
                                     <a href="{% url 'product_edit' product.id %}" class="btn btn-primary">Modifier</a>

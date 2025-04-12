@@ -131,13 +131,19 @@
             <div class="col-lg-6 d-flex align-items-stretch">
                 <div class="login-form-inner w-100">
                     <h3>Connexion</h3>
+
                     {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-danger">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+    {% for message in messages %}
+        {% if 'error' in message.tags %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+                    
                     <form method="POST" class="row login_form">
                         {% csrf_token %}
                         <div class="col-md-12 form-group">

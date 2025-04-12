@@ -1,13 +1,13 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    <section class="add-product-area section_gap">
+    <section class="add-product-area section_gap" style="background-color: #f8f1e9;">
         <div class="container">
             <!-- Start Banner Area -->
-            <section class="banner-area organic-breadcrumb">
+            <section class="banner-area organic-breadcrumb" style="background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);">
                 <div class="container">
                     <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
                         <div class="col-first">
-                            <h1>{% if product %}Modifier le produit{% else %}Ajouter un produit{% endif %}</h1>
+                            <h1 style="color: gold; font-family: 'Times New Roman', serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">{% if product %}Modifier le produit{% else %}Ajouter un produit{% endif %}</h1>
                             <nav class="d-flex align-items-center">
                             </nav>
                         </div>
@@ -15,41 +15,43 @@
                 </div>
             </section>
             <!-- End Banner Area -->
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border: 1px solid gold;">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label>Nom</label>
-                    <input type="text" name="name" class="form-control" value="{% if product %}{{ product.name }}{% elif form_data %}{{ form_data.name }}{% endif %}" required>
+                    <label style="color: #1a2a6c; font-weight: bold;">Nom</label>
+                    <input type="text" name="name" class="form-control" style="border: 1px solid #b21f1f;" value="{% if product %}{{ product.name }}{% elif form_data %}{{ form_data.name }}{% endif %}" required>
                     {% if errors.name %}<small class="text-danger">{{ errors.name }}</small>{% endif %}
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description" class="form-control" required>{% if product %}{{ product.description }}{% elif form_data %}{{ form_data.description }}{% endif %}</textarea>
+                    <label style="color: #1a2a6c; font-weight: bold;">Description</label>
+                    <textarea name="description" class="form-control" style="border: 1px solid #b21f1f; min-height: 100px;" required>{% if product %}{{ product.description }}{% elif form_data %}{{ form_data.description }}{% endif %}</textarea>
                     {% if errors.description %}<small class="text-danger">{{ errors.description }}</small>{% endif %}
                 </div>
                 <div class="form-group">
-                    <label>Prix</label>
-                    <input type="number" name="price" step="0.01" class="form-control" value="{% if product %}{{ product.price }}{% elif form_data %}{{ form_data.price }}{% endif %}" required>
+                    <label style="color: #1a2a6c; font-weight: bold;">Prix</label>
+                    <input type="number" name="price" step="0.01" class="form-control" style="border: 1px solid #b21f1f;" value="{% if product %}{{ product.price }}{% elif form_data %}{{ form_data.price }}{% endif %}" required>
                     {% if errors.price %}<small class="text-danger">{{ errors.price }}</small>{% endif %}
                 </div>
                 <div class="form-group">
-                    <label>Stock</label>
-                    <input type="number" name="stock" class="form-control" value="{% if product %}{{ product.stock }}{% elif form_data %}{{ form_data.stock }}{% endif %}" required>
+                    <label style="color: #1a2a6c; font-weight: bold;">Stock</label>
+                    <input type="number" name="stock" class="form-control" style="border: 1px solid #b21f1f;" value="{% if product %}{{ product.stock }}{% elif form_data %}{{ form_data.stock }}{% endif %}" required>
                     {% if errors.stock %}<small class="text-danger">{{ errors.stock }}</small>{% endif %}
                 </div>
                 <div class="form-group">
-                    <label>Image</label>
-                    <input type="file" name="image" class="form-control" {% if not product %}required{% endif %}>
+                    <label style="color: #1a2a6c; font-weight: bold;">Image</label>
+                    <input type="file" name="image" class="form-control" style="border: 1px solid #b21f1f;" {% if not product %}required{% endif %}>
                     {% if product.image %}
-                        <p>Image actuelle : <img src="{{ product.image.url }}" alt="Current image" style="max-width: 100px;"></p>
+                        <p style="margin-top: 10px;">Image actuelle : <img src="{{ product.image.url }}" alt="Current image" style="max-width: 100px; border: 2px solid gold;"></p>
                     {% endif %}
                 </div>
-                <button type="submit" class="primary-btn">
-                    {% if product %}Mettre à jour{% else %}Ajouter{% endif %}
-                </button>
-                {% if product %}
-                    <a href="{% url 'product_list' %}" class="btn btn-secondary">Annuler</a>
-                {% endif %}
+                <div class="form-group text-right">
+                    <button type="submit" class="btn" style="background: linear-gradient(to right, #1a2a6c, #b21f1f); color: gold; border: none; padding: 10px 25px; font-weight: bold;">
+                        {% if product %}Mettre à jour{% else %}Ajouter{% endif %}
+                    </button>
+                    {% if product %}
+                        <a href="{% url 'product_list' %}" class="btn" style="background: linear-gradient(to right, #b21f1f, #1a2a6c); color: gold; border: none; padding: 10px 25px; font-weight: bold; margin-left: 10px;">Annuler</a>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </section>

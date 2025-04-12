@@ -1,43 +1,187 @@
 {% extends 'base/base.html' %}
 {% load static %}
+
 {% block content %}
- <!-- Start Banner Area -->
- <section class="banner-area organic-breadcrumb">
-	<div class="container">
-		<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-			<div class="col-first">
-				<h1>Ajouter au panier</h1>
-				<nav class="d-flex align-items-center">
-				</nav>
-			</div>
-		</div>
-	</div>
-</section>
-<!-- End Banner Area -->
-    <section class="single-product-area section_gap">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    {% if product.image %}
-                        <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
-                    {% endif %}
-                </div>
-                <div class="col-lg-6">
-                    <h1>{{ product.name }}</h1>
-                    <p>{{ product.description }}</p>
-                    <h3>${{ product.price }}</h3>
-                    <p>Stock: {{ product.stock }}</p>
-                    {% if user.is_authenticated and not user.is_staff %}
-                        <form method="POST" action="{% url 'add_to_cart' product.id %}">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" required>
-                            <button type="submit" class="primary-btn">Add to Cart</button>
-                        </form>
-                    {% endif %}
-                </div>
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+    
+    :root {
+        --royal-purple: #4B0082;
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg,rgb(219, 148, 81) ,rgb(219, 148, 81));
+        color: var(--royal-gold);
+        padding: 60px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/royal-pattern.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    .breadcrumb-banner h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 700;
+        font-size: 36px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: var(--royal-gold);
+    }
+    .single-product-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .single-product-area h1 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 32px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .single-product-area p {
+        color: var(--velvet-blue);
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    .single-product-area h3 {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-gold);
+        font-size: 28px;
+        margin: 20px 0;
+    }
+    .single-product-area .stock {
+        color: var(--regal-red);
+        font-weight: bold;
+        font-style: italic;
+    }
+    .img-fluid {
+        border: 3px solid var(--royal-gold);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+    }
+    .img-fluid:hover {
+        transform: scale(1.02);
+    }
+    input[type="number"] {
+        padding: 10px;
+        border: 2px solid var(--royal-purple);
+        border-radius: 5px;
+        margin-right: 15px;
+        font-family: 'Marcellus SC', serif;
+        text-align: center;
+        width: 80px;
+    }
+    .primary-btn {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        text-transform: uppercase;
+        padding: 12px 30px;
+        transition: all 0.3s;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    .primary-btn:hover {
+        background: var(--royal-purple);
+        color: var(--royal-gold);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .royal-seal {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 80px;
+        opacity: 0.7;
+    }
+</style>
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Ajouter au panier</h1>
+                <nav class="d-flex align-items-center">
+                    <!-- Navigation if needed -->
+                </nav>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<section class="single-product-area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {% if product.image %}
+                    <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+                <h3>{{ product.price }}fcfa</h3>
+                <p class="stock">Stock: {{ product.stock }}</p>
+                <form method="POST" action="{% if user.is_authenticated %}{% url 'add_to_cart' product.id %}{% else %}{% url 'login' %}?next={% url 'single-product' product.id %}{% endif %}" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" required>
+                    <button type="submit" class="primary-btn">Ajouter au panier</button>
+                </form>
+                {% if not user.is_authenticated %}
+                    <p style="color: var(--regal-red); margin-top: 10px;">Veuillez vous connecter pour ajouter au panier.</p>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate product image on load
+        const productImage = document.querySelector('.img-fluid');
+        if (productImage) {
+            productImage.style.opacity = '0';
+            productImage.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                productImage.style.transition = 'all 0.5s ease';
+                productImage.style.opacity = '1';
+                productImage.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // Animate product details
+        const productDetails = document.querySelector('.col-lg-6:last-child');
+        if (productDetails) {
+            productDetails.style.opacity = '0';
+            productDetails.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                productDetails.style.transition = 'all 0.5s ease 0.2s';
+                productDetails.style.opacity = '1';
+                productDetails.style.transform = 'translateX(0)';
+            }, 100);
+        }
+    });
+</script>
 {% endblock %}

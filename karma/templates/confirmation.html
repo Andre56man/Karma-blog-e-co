@@ -1,127 +1,142 @@
-{%  extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
-{% block content %}
-	<section class="banner-area organic-breadcrumb">
-		<div class="container">
-			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-				<div class="col-first">
-					<h1>Confirmation</h1>
-					<nav class="d-flex align-items-center">
-						<a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-						<a href="#">Confirmation</a>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Banner Area -->
 
-	<!--================Order Details Area =================-->
-	<section class="order_details section_gap">
-		<div class="container">
-			<h3 class="title_confirmation">Merci. Votre commande a été reçue.</h3>
-			{% if order %}
-				<div class="row order_d_inner">
-					<div class="col-lg-4">
-						<div class="details_item">
-							<h4>Informations de la commande</h4>
-							<ul class="list">
-								<li><a href="#"><span>Numéro de commande</span> : {{ order.id }}</a></li>
-								<li><a href="#"><span>Date</span> : {{ order.created_at|date:"d M Y" }}</a></li>
-								<li><a href="#"><span>Total</span> : ${{ order.total }}</a></li>
-								<li><a href="#"><span>Méthode de paiement</span> : Paiement par chèque (à personnaliser)</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="details_item">
-							<h4>Adresse de facturation</h4>
-							<ul class="list">
-								<li><a href="#"><span>Rue</span> : {{ user.profile.street|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Ville</span> : {{ user.profile.city|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Pays</span> : {{ user.profile.country|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Code postal</span> : {{ user.profile.postcode|default:"Non spécifié" }}</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="details_item">
-							<h4>Adresse de livraison</h4>
-							<ul class="list">
-								<li><a href="#"><span>Rue</span> : {{ user.profile.street|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Ville</span> : {{ user.profile.city|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Pays</span> : {{ user.profile.country|default:"Non spécifié" }}</a></li>
-								<li><a href="#"><span>Code postal</span> : {{ user.profile.postcode|default:"Non spécifié" }}</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="order_details_table">
-					<h2>Détails de la commande</h2>
-					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">Produit</th>
-									<th scope="col">Quantité</th>
-									<th scope="col">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for item in order.orderitem_set.all %}
-									<tr>
-										<td>
-											<p>{{ item.product.name }}</p>
-										</td>
-										<td>
-											<h5>x {{ item.quantity }}</h5>
-										</td>
-										<td>
-											<p>${{ item.price|floatformat:2 }}</p>
-										</td>
-									</tr>
-								{% endfor %}
-								<tr>
-									<td>
-										<h4>Sous-total</h4>
-									</td>
-									<td>
-										<h5></h5>
-									</td>
-									<td>
-										<p>${{ order.total|floatformat:2 }}</p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h4>Frais de livraison</h4>
-									</td>
-									<td>
-										<h5></h5>
-									</td>
-									<td>
-										<p>Tarif fixe : $50.00</p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h4>Total</h4>
-									</td>
-									<td>
-										<h5></h5>
-									</td>
-									<td>
-										<p>${{ order.total|add:50|floatformat:2 }}</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			{% else %}
-				<p>Aucune commande trouvée.</p>
-			{% endif %}
-		</div>
-	</section>
-	<!--================End Order Details Area =================-->
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+    
+    :root {
+        --royal-purple: rgb(143, 83, 61);
+        --royal-gold: #FFD700;
+        --ivory: #F8F1E9;
+    }
+
+    .confirmation-area {
+        background: var(--ivory);
+        padding: 100px 0;
+        text-align: center;
+    }
+
+    .confirmation-box {
+        background: white;
+        padding: 50px;
+        border-radius: 10px;
+        border: 3px solid var(--royal-gold);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+        transform: translateY(30px);
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .confirmation-icon {
+        color: #4CAF50;
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: bounce 1s ease infinite alternate;
+    }
+
+    .confirmation-title {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--royal-purple);
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .confirmation-text {
+        font-family: 'Marcellus SC', serif;
+        color: var(--royal-purple);
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .email-notice {
+        background: rgba(75, 0, 130, 0.1);
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        font-family: 'Marcellus SC', serif;
+    }
+
+    .order-number {
+        background: rgba(255, 215, 0, 0.2);
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 15px 0;
+        font-family: 'Marcellus SC', serif;
+    }
+
+    .back-to-shop {
+        background: var(--royal-gold);
+        color: var(--royal-purple);
+        border: 2px solid var(--royal-purple);
+        font-family: 'Marcellus SC', serif;
+        padding: 12px 30px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounce {
+        to {
+            transform: translateY(-10px);
+        }
+    }
+</style>
+
+<!-- Confirmation Area -->
+<section class="confirmation-area section_gap">
+    <div class="container">
+        <div class="confirmation-box">
+            <div class="confirmation-icon">
+                <i class="lnr lnr-checkmark-circle"></i>
+            </div>
+            <h1 class="confirmation-title">Commande confirmée !</h1>
+            <p class="confirmation-text">Merci pour votre achat. Votre commande a été enregistrée avec succès.</p>
+            
+            {% if order %}
+                <div class="order-number">
+                    <p>Numéro de commande: <strong>{{ order.id }}</strong></p>
+                </div>
+            {% endif %}
+            
+            <div class="email-notice">
+                <p>Un email de confirmation a été envoyé à <strong>{{ user.email }}</strong></p>
+                <p class="confirmation-text">Veuillez vérifier votre boîte de réception.</p>
+                {% if order %}
+                <p class="confirmation-text">Montant total: <strong>{{ order.total|floatformat:2 }} FCFA</strong></p>
+                {% endif %}
+            </div>
+            
+            <a href="{% url 'index' %}" class="back-to-shop">Retour à l'accueil</a>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation supplémentaire pour les éléments
+        const elements = document.querySelectorAll('.email-notice, .back-to-shop');
+        elements.forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                el.style.transition = `all 0.5s ease ${index * 0.2}s`;
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, 500);
+        });
+    });
+</script>
 {% endblock %}

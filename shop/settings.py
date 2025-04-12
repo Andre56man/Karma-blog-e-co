@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'karma.apps.KarmaConfig'
+    'karma.apps.KarmaConfig',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +148,4 @@ PASSWORD_RESET_SUBJECT = 'Réinitialisation de votre mot de passe'
 
 # Template de l'email
 PASSWORD_RESET_EMAIL_TEMPLATE = 'password_reset_email.html'
+PASSWORD_RESET_EMAIL_TEMPLATE = 'order_confirmation.html'

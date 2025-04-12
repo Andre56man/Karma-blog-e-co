@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="blog-add-area section_gap">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-title text-center">
+                        <h1>Create a New Blog Post</h1>
+                        <p>Share your thoughts and insights</p>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" class="blog-add-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" id="title" class="form-control" required placeholder="Enter post title">
+                        </div>
+                        <div class="form-group">
+                            <label for="excerpt">Excerpt</label>
+                            <textarea name="excerpt" id="excerpt" class="form-control" rows="3" placeholder="A short summary of your post"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            <textarea name="content" id="content" class="form-control" rows="10" required placeholder="Write your blog post here"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Featured Image</label>
+                            <input type="file" name="image" id="image" class="form-control-file" accept="image/*">
+                            <small class="form-text text-muted">Optional: Upload an image to feature with your post.</small>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="primary-btn">Publish Post</button>
+                            <a href="{% url 'blog' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

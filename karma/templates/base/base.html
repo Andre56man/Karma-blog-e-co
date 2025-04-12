@@ -48,59 +48,86 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
-                            <div class="header-btn" style="display: inline-flex; align-items: center;">
-                                {% if request.user.is_authenticated %}
-                                    <span class="username" style="color: orange; margin-right: 1rem; font-weight: 700; font-size: 1.5rem;">
-                                        {{ request.user.username }}
-                                    </span>
-                                    <a href="{% url 'logout' %}" class="btn-default">Logout</a>
-                                {% else %}
-                                    <a href="{% url 'login' %}" class="btn-default">Login</a>
-                                {% endif %}
-                            </div>
-                            <a class="nav-link" href=""></a>
+                           
+                            
 
                             <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                                 <a class="nav-link" href="{% url 'index' %}">Home</a>
                             </li>
-                            <li class="nav-item {% if request.path == '/historique/' %}active{% endif %}">
-                                <a class="nav-link" href="{% url 'historique' %}">Historiques</a>
-                            </li>
-                            <li class="nav-item submenu dropdown {% if '/blog' in request.path %}active{% endif %}">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">Blog</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item {% if request.path == '/blog/' %}active{% endif %}">
-                                        <a class="nav-link" href="{% url 'blog' %}">Blog</a>
-                                    </li>
-                                    <li class="nav-item {% if request.path == '/single-blog/' %}active{% endif %}">
-                                        <a class="nav-link" href="{% url 'single-blog' %}">Blog Details</a>
-                                    </li>
-                                </ul>
+                           
+                            <li class="nav-item {% if request.path == '/blog' %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'blog' %}">Blog</a>
                             </li>
                             <li class="nav-item {% if request.path == '/contact/' %}active{% endif %}">
                                 <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                             </li>
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
-                            <li class="nav-item">
-                                <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-                            </li>
-                        </ul>
+                        
+                        <a class="nav-link" href=""></a>
+                        <div class="header-btn" style="display: inline-flex; align-items: center;">
+                            {% if request.user.is_authenticated %}
+                                <div class="user-menu" style="position: relative;">
+                                    <span class="username" style="color: orange; margin-right: 1rem; font-weight: 700; font-size: 1.5rem; cursor: pointer;">
+                                        {{ request.user.username }} ▼
+                                    </span>
+                                    <div class="dropdown-content" style="
+                                        position: absolute;
+                                        right: 0;
+                                        top: 100%;
+                                        background: white;
+                                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                                        border-radius: 4px;
+                                        overflow: hidden;
+                                        display: none;
+                                        min-width: 120px;
+                                        z-index: 1;
+                                    ">
+
+                                    <a class="nav-link" href="{% url 'historique' %}" style="color: black;">Historiques</a>
+
+                                    <a class="nav-link" href="{% url 'cart' %}" style="color: black;">Panier</a>
+
+
+                                        <a href="{% url 'logout' %}" class="btn-default" style="
+                                            display: block;
+                                            padding: 10px;
+                                            text-align: center;
+                                            color: red;
+                                            text-decoration: none;
+                                        ">Logout</a>
+                                        
+                                           
+
+
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <script>
+                                    document.querySelector('.username').addEventListener('click', function() {
+                                        const dropdown = this.nextElementSibling;
+                                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                                    });
+                                    
+                                    // Ferme le menu quand on clique ailleurs
+                                    document.addEventListener('click', function(e) {
+                                        if (!e.target.closest('.user-menu')) {
+                                            const dropdowns = document.querySelectorAll('.dropdown-content');
+                                            dropdowns.forEach(dropdown => {
+                                                dropdown.style.display = 'none';
+                                            });
+                                        }
+                                    });
+                                </script>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn-default"style="color:black">Se connecter</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </nav>
         </div>
-        <div class="search_input" id="search_input_box">
-            <div class="container">
-                <form class="d-flex justify-content-between" id="search-form">
-                    <input type="text" class="form-control" id="search_input" placeholder="Search Here" onkeyup="searchPage()">
-                    <button type="submit" class="btn" style="display:none;"></button>
-                    <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
-                </form>
-            </div>
-        </div>
+       
     </header>
     <!-- End Header Area -->
 

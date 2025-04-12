@@ -1,437 +1,345 @@
-{%  extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
+
 {% block content %}
+<style>
+    /* Royal Theme Styles */
+    .banner-area {
+        background: linear-gradient(135deg, rgb(222, 197, 165), rgb(235, 156, 59));
+        color: #FFD700;
+        padding: 60px 0;
+        border-bottom: 4px solid #FFD700;
+    }
+    .banner-area h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 48px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .banner-area nav a {
+        color: #FFD700;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .banner-area nav a:hover {
+        color: #FFFFFF;
+    }
+    .blog-area {
+        background: #F8F1E9;
+        padding: 50px 0;
+    }
+    .section-title h1 {
+        font-family: 'Cinzel', serif;
+        color: #4B0082;
+        font-size: 36px;
+        border-bottom: 2px solid #FFD700;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+    .section-title p {
+        color: rgb(169, 157, 150);
+        font-style: italic;
+    }
+    .single-blog-post {
+        background: rgb(204, 147, 109);
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .single-blog-post:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+    .single-blog-post img {
+        width: 100%;
+        height: auto;
+        border-bottom: 3px solid #FFD700;
+    }
+    .post-details {
+        padding: 20px;
+    }
+    .post-details h6 {
+        font-family: 'Cinzel', serif;
+        color: rgb(255, 254, 254);
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .post-meta p {
+        color: #8B0000;
+        font-size: 14px;
+        font-style: italic;
+    }
+    .post-details p {
+        color: #333;
+        font-size: 16px;
+    }
+    .post-bottom {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    .social-info {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #4B0082;
+        font-family: 'Cinzel', serif;
+    }
+    .social-info .lnr {
+        font-size: 18px;
+        margin-right: 5px;
+        color: rgb(0, 0, 0);
+    }
+    .social-info .hover-text {
+        margin: 0;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+    .social-info:hover .hover-text {
+        color: #FFD700;
+    }
+    .pagination .page-link {
+        background-color: #4B0082;
+        color: #FFD700;
+        border: 1px solid #FFD700;
+        font-family: 'Cinzel', serif;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #FFD700;
+        color: #4B0082;
+        border-color: #FFD700;
+    }
+    .pagination .page-link:hover {
+        background-color: #8A2BE2;
+        color: #FFFFFF;
+    }
+    .primary-btn {
+        background: rgb(236, 157, 66);
+        color: #4B0082;
+        border: 2px solid #4B0082;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        padding: 10px 20px;
+        transition: background 0.3s, color 0.3s;
+    }
+    .primary-btn:hover {
+        background: rgb(51, 28, 1);
+        color: #FFD700;
+    }
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+        background: rgb(204, 147, 109);
+        margin: 15% auto;
+        padding: 20px;
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        text-align: center;
+        font-family: 'Cinzel', serif;
+        color: #4B0082;
+    }
+    .modal-content h4 {
+        margin-bottom: 20px;
+        color: rgb(0, 0, 0);
+    }
+    .modal-content .btn {
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        font-family: 'Cinzel', serif;
+        cursor: pointer;
+    }
+    .modal-content .btn-confirm {
+        background: rgb(236, 157, 66);
+        color: #4B0082;
+        border: 2px solid #4B0082;
+    }
+    .modal-content .btn-confirm:hover {
+        background: rgb(51, 28, 1);
+        color: #FFD700;
+    }
+    .modal-content .btn-cancel {
+        background: #4B0082;
+        color: #FFD700;
+        border: 2px solid #FFD700;
+    }
+    .modal-content .btn-cancel:hover {
+        background: #8A2BE2;
+        color: #FFFFFF;
+    }
+</style>
 
-    <!-- Start Banner Area -->
-    <section class="banner-area organic-breadcrumb">
-        <div class="container">
-            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-                <div class="col-first">
-                    <h1>Blog Page</h1>
-                    <nav class="d-flex align-items-center">
-                        <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="{% url 'blog' %}">Blog</a>
-                    </nav>
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Our Royal Blog</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog-area section_gap">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <div class="section-title">
+                    <h1>Latest Royal Decrees</h1>
+                    <p>Discover the proclamations of our realm</p>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- End Banner Area -->
-
-    <!--================Blog Categorie Area =================-->
-    <section class="blog_categorie_area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="categories_post">
-                        <img src="{% static 'img/blog/cat-post/cat-post-3.jpg' %}" alt="post">
-                        <div class="categories_details">
-                            <div class="categories_text">
-                                    <h5>Social Life</h5>
+        <div class="row">
+            {% for post in latest_posts %}
+                <div class="col-lg-4 col-md-6 searchable-item">
+                    <div class="single-blog-post">
+                        {% if post.image %}
+                            <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                            <img class="img-fluid" src="{% static 'img/blog/default.jpg' %}" alt="">
+                        {% endif %}
+                        <div class="post-details">
+                            <h6>{{ post.title }}</h6>
+                            <div class="post-meta">
+                                <p>By {{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+                            </div>
+                            <p>{{ post.excerpt|truncatewords:15 }}</p>
+                            <div class="post-bottom d-flex justify-content-start align-items-center">
+                                <a href="{% url 'blog_detaille' post.id %}" class="social-info">
+                                    <span class="lnr lnr-move"></span>
+                                    <p class="hover-text">Read More</p>
                                 </a>
-                                <div class="border_line"></div>
-                                <p>Enjoy your social life together</p>
+                                {% if user.is_staff %}
+                                    <a href="{% url 'blog_edit' post.id %}" class="social-info">
+                                        <span class="lnr lnr-pencil"></span>
+                                        <p class="hover-text">Edit</p>
+                                    </a>
+                                    <a href="#" class="social-info delete-post" data-post-id="{{ post.id }}">
+                                        <span class="lnr lnr-trash"></span>
+                                        <p class="hover-text">Delete</p>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="categories_post">
-                        <img src="{% static 'img/blog/cat-post/cat-post-2.jpg' %}" alt="post">
-                        <div class="categories_details">
-                            <div class="categories_text">
-                                    <h5>Politics</h5>
-                                </a>
-                                <div class="border_line"></div>
-                                <p>Be a part of politics</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="categories_post">
-                        <img src="{% static 'img/blog/cat-post/cat-post-1.jpg' %}" alt="post">
-                        <div class="categories_details">
-                            <div class="categories_text">
-                                    <h5>Food</h5>
-                                </a>
-                                <div class="border_line"></div>
-                                <p>Let the food be finished</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% empty %}
+                <p>No royal decrees available yet.</p>
+            {% endfor %}
         </div>
-    </section>
-    <!--================Blog Categorie Area =================-->
-
-    <!--================Blog Area =================-->
-    <section class="blog_area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="blog_left_sidebar">
-                        <article class="row blog_item">
-                            <div class="col-md-3">
-                                <div class="blog_info text-right">
-                                    <div class="post_tag">
-                                        <a href="#">Food,</a>
-                                        <a class="active" href="#">Technology,</a>
-                                        <a href="#">Politics,</a>
-                                        <a href="#">Lifestyle</a>
-                                    </div>
-                                    <ul class="blog_meta list">
-                                        <li><a href="#">Mark wiens<i class="lnr lnr-user"></i></a></li>
-                                        <li><a href="#">12 Dec, 2018<i class="lnr lnr-calendar-full"></i></a></li>
-                                        <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
-                                        <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="blog_post">
-                                    <img src="{% static 'img/blog/main-blog/m-blog-1.jpg' %}" alt="">
-                                    <div class="blog_details">
-                                        <a href="{% url 'single-blog' %}">
-                                            <h2>Astronomy Binoculars A Great Alternative</h2>
-                                        </a>
-                                        <p>MCSE boot camps have its supporters and its detractors. Some people do not
-                                            understand why you should have to spend money on boot camp when you can get
-                                            the MCSE study materials yourself at a fraction.</p>
-                                        <a href="{% url 'single-blog' %}" class="white_bg_btn">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row blog_item">
-                            <div class="col-md-3">
-                                <div class="blog_info text-right">
-                                    <div class="post_tag">
-                                        <a href="#">Food,</a>
-                                        <a class="active" href="#">Technology,</a>
-                                        <a href="#">Politics,</a>
-                                        <a href="#">Lifestyle</a>
-                                    </div>
-                                    <ul class="blog_meta list">
-                                        <li><a href="#">Mark wiens<i class="lnr lnr-user"></i></a></li>
-                                        <li><a href="#">12 Dec, 2018<i class="lnr lnr-calendar-full"></i></a></li>
-                                        <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
-                                        <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="blog_post">
-                                    <img src="{% static 'img/blog/main-blog/m-blog-2.jpg' %}" alt="">
-                                    <div class="blog_details">
-                                        <a href="{% url 'single-blog' %}">
-                                            <h2>The Basics Of Buying A Telescope</h2>
-                                        </a>
-                                        <p>MCSE boot camps have its supporters and its detractors. Some people do not
-                                            understand why you should have to spend money on boot camp when you can get
-                                            the MCSE study materials yourself at a fraction.</p>
-                                        <a href="{% url 'single-blog' %}" class="white_bg_btn">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row blog_item">
-                            <div class="col-md-3">
-                                <div class="blog_info text-right">
-                                    <div class="post_tag">
-                                        <a href="#">Food,</a>
-                                        <a class="active" href="#">Technology,</a>
-                                        <a href="#">Politics,</a>
-                                        <a href="#">Lifestyle</a>
-                                    </div>
-                                    <ul class="blog_meta list">
-                                        <li><a href="#">Mark wiens<i class="lnr lnr-user"></i></a></li>
-                                        <li><a href="#">12 Dec, 2018<i class="lnr lnr-calendar-full"></i></a></li>
-                                        <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
-                                        <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="blog_post">
-                                    <img src="{% static 'img/blog/main-blog/m-blog-3.jpg' %}" alt="">
-                                    <div class="blog_details">
-                                        <a href="{% url 'single-blog' %}">
-                                            <h2>The Glossary Of Telescopes</h2>
-                                        </a>
-                                        <p>MCSE boot camps have its supporters and its detractors. Some people do not
-                                            understand why you should have to spend money on boot camp when you can get
-                                            the MCSE study materials yourself at a fraction.</p>
-                                        <a href="{% url 'single-blog' %}" class="white_bg_btn">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row blog_item">
-                            <div class="col-md-3">
-                                <div class="blog_info text-right">
-                                    <div class="post_tag">
-                                        <a href="#">Food,</a>
-                                        <a class="active" href="#">Technology,</a>
-                                        <a href="#">Politics,</a>
-                                        <a href="#">Lifestyle</a>
-                                    </div>
-                                    <ul class="blog_meta list">
-                                        <li><a href="#">Mark wiens<i class="lnr lnr-user"></i></a></li>
-                                        <li><a href="#">12 Dec, 2018<i class="lnr lnr-calendar-full"></i></a></li>
-                                        <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
-                                        <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="blog_post">
-                                    <img src="{% static 'img/blog/main-blog/m-blog-4.jpg' %}" alt="">
-                                    <div class="blog_details">
-                                        <a href="{% url 'single-blog' %}">
-                                            <h2>The Night Sky</h2>
-                                        </a>
-                                        <p>MCSE boot camps have its supporters and its detractors. Some people do not
-                                            understand why you should have to spend money on boot camp when you can get
-                                            the MCSE study materials yourself at a fraction.</p>
-                                        <a href="{% url 'single-blog' %}" class="white_bg_btn">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="row blog_item">
-                            <div class="col-md-3">
-                                <div class="blog_info text-right">
-                                    <div class="post_tag">
-                                        <a href="#">Food,</a>
-                                        <a class="active" href="#">Technology,</a>
-                                        <a href="#">Politics,</a>
-                                        <a href="#">Lifestyle</a>
-                                    </div>
-                                    <ul class="blog_meta list">
-                                        <li><a href="#">Mark wiens<i class="lnr lnr-user"></i></a></li>
-                                        <li><a href="#">12 Dec, 2018<i class="lnr lnr-calendar-full"></i></a></li>
-                                        <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
-                                        <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="blog_post">
-                                    <img src="{% static 'img/blog/main-blog/m-blog-5.jpg' %}" alt="">
-                                    <div class="blog_details">
-                                        <a href="{% url 'single-blog' %}">
-                                            <h2>Telescopes 101</h2>
-                                        </a>
-                                        <p>MCSE boot camps have its supporters and its detractors. Some people do not
-                                            understand why you should have to spend money on boot camp when you can get
-                                            the MCSE study materials yourself at a fraction.</p>
-                                        <a href="{% url 'single-blog' %}" class="white_bg_btn">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <nav class="blog-pagination justify-content-center d-flex">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a href="#" class="page-link" aria-label="Previous">
-                                        <span aria-hidden="true">
-                                            <span class="lnr lnr-chevron-left"></span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a href="#" class="page-link">01</a></li>
-                                <li class="page-item active"><a href="#" class="page-link">02</a></li>
-                                <li class="page-item"><a href="#" class="page-link">03</a></li>
-                                <li class="page-item"><a href="#" class="page-link">04</a></li>
-                                <li class="page-item"><a href="#" class="page-link">09</a></li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link" aria-label="Next">
-                                        <span aria-hidden="true">
-                                            <span class="lnr lnr-chevron-right"></span>
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="blog_right_sidebar">
-                        <aside class="single_sidebar_widget search_widget">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search Posts" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Posts'">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"><i class="lnr lnr-magnifier"></i></button>
-                                </span>
-                            </div><!-- /input-group -->
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget author_widget">
-                            <img class="author_img rounded-circle" src="{% static 'img/blog/author.png' %}" alt="">
-                            <h4>Charlie Barber</h4>
-                            <p>Senior blog writer</p>
-                            <div class="social_icon">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-github"></i></a>
-                                <a href="#"><i class="fa fa-behance"></i></a>
-                            </div>
-                            <p>Boot camps have its supporters andit sdetractors. Some people do not understand why you
-                                should have to spend money on boot camp when you can get. Boot camps have itssuppor
-                                ters andits detractors.</p>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget popular_post_widget">
-                            <h3 class="widget_title">Popular Posts</h3>
-                            <div class="media post_item">
-                                <img src="{% static 'img/blog/popular-post/post1.jpg' %}" alt="post">
-                                <div class="media-body">
-                                        <h3>Space The Final Frontier</h3>
-                                    </a>
-                                    <p>02 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="{% static 'img/blog/popular-post/post2.jpg' %}" alt="post">
-                                <div class="media-body">
-                                        <h3>The Amazing Hubble</h3>
-                                    </a>
-                                    <p>02 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="{% static 'img/blog/popular-post/post3.jpg' %}" alt="post">
-                                <div class="media-body">
-                                        <h3>Astronomy Or Astrology</h3>
-                                    </a>
-                                    <p>03 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="{% static 'img/blog/popular-post/post4.jpg' %}" alt="post">
-                                <div class="media-body">
-                                        <h3>Asteroids telescope</h3>
-                                    </a>
-                                    <p>01 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget ads_widget">
-                            <a href="#"><img class="img-fluid" src="{% static 'img/blog/add.jpg' %}" alt=""></a>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget post_category_widget">
-                            <h4 class="widget_title">Post Categories</h4>
-                            <ul class="list cat-list">
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Technology</p>
-                                        <p>37</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Lifestyle</p>
-                                        <p>24</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Fashion</p>
-                                        <p>59</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Art</p>
-                                        <p>29</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Food</p>
-                                        <p>15</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Architecture</p>
-                                        <p>09</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="d-flex justify-content-between">
-                                        <p>Adventure</p>
-                                        <p>44</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single-sidebar-widget newsletter_widget">
-                            <h4 class="widget_title">Newsletter</h4>
-                            <p>
-                                Here, I focus on a range of items and features that we use in life without
-                                giving them a second thought.
-                            </p>
-                            <div class="form-group d-flex flex-row">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
-                                    </div>
-                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Enter email"
-                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email'">
-                                </div>
-                                <a href="#" class="bbtns">Subscribe</a>
-                            </div>
-                            <p class="text-bottom">You can unsubscribe at any time</p>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single-sidebar-widget tag_cloud_widget">
-                            <h4 class="widget_title">Tag Clouds</h4>
-                            <ul class="list">
-                                <li><a href="#">Technology</a></li>
-                                <li><a href="#">Fashion</a></li>
-                                <li><a href="#">Architecture</a></li>
-                                <li><a href="#">Fashion</a></li>
-                                <li><a href="#">Food</a></li>
-                                <li><a href="#">Technology</a></li>
-                                <li><a href="#">Lifestyle</a></li>
-                                <li><a href="#">Art</a></li>
-                                <li><a href="#">Adventure</a></li>
-                                <li><a href="#">Food</a></li>
-                                <li><a href="#">Lifestyle</a></li>
-                                <li><a href="#">Adventure</a></li>
-                            </ul>
-                        </aside>
-                    </div>
-                </div>
+        <!-- Pagination -->
+        {% if latest_posts.paginator.num_pages > 1 %}
+            <div class="row justify-content-center mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if latest_posts.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ latest_posts.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in latest_posts.paginator.page_range %}
+                            <li class="page-item {% if latest_posts.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if latest_posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ latest_posts.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
-        </div>
-    </section>
-    <!--================Blog Area =================-->
+        {% endif %}
+        {% if user.is_staff %}
+            <div class="text-center mt-4">
+                <a href="{% url 'blog_add' %}" class="primary-btn">Proclaim a New Decree</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
 
-    <!-- start footer Area -->
-    {% endblock %}
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h4>Confirm Deletion</h4>
+        <p>Are you sure you want to delete this royal decree?</p>
+        <button class="btn btn-confirm" id="confirmDelete">Yes, Delete</button>
+        <button class="btn btn-cancel" id="cancelDelete">Cancel</button>
+    </div>
+</div>
 
+<!-- JavaScript for Modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteLinks = document.querySelectorAll('.delete-post');
+        const modal = document.getElementById('deleteModal');
+        const confirmButton = document.getElementById('confirmDelete');
+        const cancelButton = document.getElementById('cancelDelete');
+        let postId = '';
 
-    <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-        crossorigin="anonymous"></script>
-    <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
-    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-    <script src="{% static 'js/jquery.sticky.js' %}"></script>
-    <script src="{% static 'js/nouislider.min.js' %}"></script>
-    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <!--gmaps Js-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
-    <script src="{% static 'js/gmaps.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-</body>
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                postId = this.getAttribute('data-post-id');
+                modal.style.display = 'block';
+            });
+        });
 
-</html>
+        cancelButton.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        confirmButton.addEventListener('click', function () {
+            fetch("{% url 'blog_delete' 0 %}".replace('0', postId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    const postElement = document.querySelector(`.delete-post[data-post-id="${postId}"]`).closest('.single-blog-post');
+                    postElement.remove();
+                    modal.style.display = 'none';
+                    alert('Royal decree deleted successfully.');
+                } else {
+                    throw new Error('Failed to delete post');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the decree.');
+                modal.style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
