@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 def is_admin(user):
     return user.is_staff
 
-def categorie(request):
-    return render(request, 'category.html')
+def policy(request):
+    return render(request, 'policy.html')
 
 def singleproduct(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -189,12 +189,11 @@ def cart(request):
 def confirmation(request):
     return render(request, 'confirmation.html')
 
-def tracking(request):
-    return render(request, 'tracking.html')
+def about(request):
+    return render(request, 'about.html')
 
-def elements(request):
-    return render(request, 'elements.html')
-
+def policy(request):
+    return render(request,'policy.html')
 
 
 def contact(request):
@@ -207,7 +206,7 @@ def contact(request):
         full_message = f"Message de : {name} ({email})\n\n{message}"
 
         try:
-            send_mail(subject, full_message, email, ['ton.email@gmail.com'])  # destinataire
+            send_mail(subject, full_message, email, ['matrixharck@gmail.com'])  # destinataire
             messages.success(request, 'Votre message a bien été envoyé.')
         except Exception as e:
             print(f"Erreur d'envoi: {e}")
@@ -461,8 +460,21 @@ def product_delete(request, product_id):
         return redirect('index')
     return render(request, 'product_confirm_delete.html', {'product': product})
 
+from django.shortcuts import render
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .models import Product
+
 def product_list(request):
-    products = Product.objects.all()
+    # Get the search query from the 'q' parameter
+    query = request.GET.get('q', '').strip()
+    
+    # Get all products or filter by query
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = Product.objects.all()
+    
+    # Paginate the results (8 products per page)
     paginator = Paginator(products, 8)
     page = request.GET.get('page')
     try:
@@ -471,7 +483,27 @@ def product_list(request):
         products = paginator.page(1)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-    return render(request, 'product_list.html', {'products': products})
+    
+    # Pass products and query to the template
+    return render(request, 'product_list.html', {'products': products, 'query': query})
+
+def search(request):
+    query = request.GET.get('q', '').strip()
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = Product.objects.all()
+    
+    paginator = Paginator(products, 8)
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    
+    return render(request, 'product_list.html', {'products': products, 'query': query})
 
 
 

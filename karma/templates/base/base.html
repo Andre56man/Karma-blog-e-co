@@ -29,6 +29,208 @@
     <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}">
     <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Inline CSS for the glowing effect, icons, cookie banner, and search bar -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+
+        :root {
+            --royal-purple: rgb(143, 83, 61);
+            --royal-gold: #FFD700;
+            --regal-red: #8B0000;
+            --velvet-blue: #1E1E5A;
+            --ivory: #F8F1E9;
+            --heraldic-silver: #C0C0C0;
+        }
+
+        .success-icon {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            display: block;
+        }
+        .success-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: glow 2s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 1); }
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+        }
+        .success-message {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 128, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        .user-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+        .user-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .green-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .disconnected-icon {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+        .disconnected-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        /* USER MENU DROPDOWN STYLES */
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1001;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .show {
+            display: block;
+        }
+
+        /* Cookie Consent Banner Styles */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, var(--royal-purple), var(--velvet-blue));
+            color: var(--royal-gold);
+            padding: 15px 20px;
+            display: none;
+            z-index: 1000;
+            border-top: 2px solid var(--royal-gold);
+            font-family: 'Marcellus SC', serif;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .cookie-banner p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .cookie-banner a {
+            color: var(--heraldic-silver);
+            text-decoration: underline;
+        }
+        .cookie-banner a:hover {
+            color: var(--royal-gold);
+        }
+        .cookie-banner button {
+            background: var(--royal-gold);
+            color: var(--royal-purple);
+            border: 2px solid var(--royal-purple);
+            padding: 8px 20px;
+            margin-left: 20px;
+            font-family: 'Marcellus SC', serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cookie-banner button:hover {
+            background: var(--royal-purple);
+            color: var(--royal-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        /* Search Bar Styles */
+        .search_area {
+            position: relative;
+        }
+        .search_input_box {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: var(--ivory);
+            border: 2px solid var(--royal-gold);
+            border-radius: 4px;
+            padding: 5px;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+        }
+        .search_input_box input {
+            border: none;
+            outline: none;
+            padding: 8px 12px;
+            font-family: 'Marcellus SC', serif;
+            font-size: 14px;
+            color: var(--royal-purple);
+            background: transparent;
+            width: 200px;
+        }
+        .search_input_box input::placeholder {
+            color: var(--heraldic-silver);
+        }
+        .search_input_box .close_search {
+            background: none;
+            border: none;
+            color: var(--regal-red);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+        .search_icon:hover {
+            color: var(--heraldic-silver);
+        }
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            .search_area {
+                margin-right: 10px;
+            }
+            .search_input_box {
+                top: 50px;
+                width: 100%;
+                max-width: 300px;
+            }
+            .search_input_box input {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -48,91 +250,83 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
-                           
-                            
-
                             <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                                 <a class="nav-link" href="{% url 'index' %}">Home</a>
                             </li>
-                           
                             <li class="nav-item {% if request.path == '/blog' %}active{% endif %}">
                                 <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/about' %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'about' %}">About Us</a>
                             </li>
                             <li class="nav-item {% if request.path == '/contact/' %}active{% endif %}">
                                 <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                             </li>
                         </ul>
+                            <a class="nav-linky"></a>
                         
-                        <a class="nav-link" href=""></a>
+                        <!-- Search Bar -->
+                        <div class="search_area" style="display: inline-flex; align-items: center; margin-right: 20px;">
+                            <form id="search-form" class="form-inline" action="{% url 'product_list' %}" method="GET">
+                                <div class="search_input_box" id="search_input_box" style="display: none;">
+                                    <input type="text" class="form-control" id="search_input" name="q" placeholder="Search products..." onkeyup="searchPage()">
+                                    <button type="button" class="close_search" id="close_search"><i class="fa fa-times"></i></button>
+                                </div>
+                            </form>
+                            <a href="javascript:void(0);" id="search" class="search_icon" style="font-size: 18px; color: var(--royal-gold); margin-left: 10px;">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                        <!-- User Menu -->
                         <div class="header-btn" style="display: inline-flex; align-items: center;">
                             {% if request.user.is_authenticated %}
-                                <div class="user-menu" style="position: relative;">
-                                    <span class="username" style="color: orange; margin-right: 1rem; font-weight: 700; font-size: 1.5rem; cursor: pointer;">
-                                        {{ request.user.username }} ▼
-                                    </span>
-                                    <div class="dropdown-content" style="
-                                        position: absolute;
-                                        right: 0;
-                                        top: 100%;
-                                        background: white;
-                                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                                        border-radius: 4px;
-                                        overflow: hidden;
-                                        display: none;
-                                        min-width: 120px;
-                                        z-index: 1;
-                                    ">
-
-                                    <a class="nav-link" href="{% url 'historique' %}" style="color: black;">Historiques</a>
-
-                                    <a class="nav-link" href="{% url 'cart' %}" style="color: black;">Panier</a>
-
-
-                                        <a href="{% url 'logout' %}" class="btn-default" style="
-                                            display: block;
-                                            padding: 10px;
-                                            text-align: center;
-                                            color: red;
-                                            text-decoration: none;
-                                        ">Logout</a>
-                                        
-                                           
-
-
-                                        
+                                <div class="user-menu">
+                                    <div class="user-icon" onclick="toggleUserMenu()">
+                                        <img src="{% static 'img/user.png' %}" alt="Connected Icon">
+                                        <span class="green-dot"></span>
                                     </div>
-                                    
+                                    <div class="dropdown-content" id="userDropdown">
+                                        <span style="color: orange; padding: 12px 16px; display: block; font-weight: 700;">
+                                            {{ request.user.username }}
+                                        </span>
+                                        <a href="{% url 'historique' %}">Historique</a>
+                                        <a href="{% url 'cart' %}">Panier</a>
+                                        <a href="{% url 'logout' %}" style="color: red;">Logout</a>
+                                    </div>
                                 </div>
-                                <script>
-                                    document.querySelector('.username').addEventListener('click', function() {
-                                        const dropdown = this.nextElementSibling;
-                                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                                    });
-                                    
-                                    // Ferme le menu quand on clique ailleurs
-                                    document.addEventListener('click', function(e) {
-                                        if (!e.target.closest('.user-menu')) {
-                                            const dropdowns = document.querySelectorAll('.dropdown-content');
-                                            dropdowns.forEach(dropdown => {
-                                                dropdown.style.display = 'none';
-                                            });
-                                        }
-                                    });
-                                </script>
                             {% else %}
-                                <a href="{% url 'login' %}" class="btn-default"style="color:black">Se connecter</a>
+                                <div class="disconnected-icon">
+                                    <a href="{% url 'login' %}">
+                                        <img src="{% static 'img/user.png' %}" alt="Disconnected Icon">
+                                    </a>
+                                </div>
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
-       
     </header>
     <!-- End Header Area -->
 
+    <!-- Display Success Message with Icon After Login -->
+    {% if success_message %}
+        <div class="success-message">
+            <div class="success-icon">
+                <img src="{% static 'img/user.png' %}" alt="Login Success Icon">
+            </div>
+            <h3>{{ success_message }}</h3>
+        </div>
+    {% endif %}
+
     {% block content %}
     {% endblock content %}
+
+    <!-- Cookie Consent Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <p>Nous utilisons des cookies pour améliorer votre expérience sur notre site et pour des analyses. En continuant, vous acceptez notre utilisation des cookies. En savoir plus dans notre <a href="{% url 'policy' %}">Politique de confidentialité</a>.</p>
+        <button onclick="acceptCookies()">Accepter</button>
+    </div>
 
     <!-- Start Footer Area -->
     <footer class="footer-area section_gap">
@@ -197,7 +391,7 @@
             </div>
             <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
                 <p class="footer-text m-0">
-                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> | <a href="{% url 'policy' %}" style="color: #FFD700;">Politique de confidentialité</a>
                 </p>
             </div>
         </div>
@@ -216,39 +410,115 @@
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/owl.carousel.min.js' %}"></script>
     <!-- Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIz...."></script>
     <script src="{% static 'js/gmaps.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
-    <!-- Script pour la recherche -->
+    <!-- Script for search -->
     <script>
-        function searchPage() {
-            let input = document.getElementById('search_input').value.toLowerCase();
-            let items = document.querySelectorAll('.searchable-item');
+        $(document).ready(function() {
+            function searchPage() {
+                let input = $('#search_input').val().toLowerCase();
+                let items = $('.searchable-item');
 
-            items.forEach(function(item) {
-                let text = item.textContent.toLowerCase();
-                if (text.includes(input)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
+                if (items.length > 0) {
+                    items.each(function() {
+                        let text = $(this).text().toLowerCase();
+                        if (text.includes(input)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+            }
+
+            $('#search').on('click', function(e) {
+                e.preventDefault();
+                console.log('Search icon clicked'); // Debug
+                const searchBox = $('#search_input_box');
+                searchBox.toggle();
+                if (searchBox.is(':visible')) {
+                    $('#search_input').focus();
                 }
             });
+
+            $('#close_search').on('click', function() {
+                console.log('Close button clicked'); // Debug
+                $('#search_input_box').hide();
+                $('#search_input').val('');
+                searchPage(); // Reset search results
+            });
+
+            $('#search-form').on('submit', function(e) {
+                // Allow server-side submission; comment out e.preventDefault() if backend is ready
+                console.log('Form submitted with query:', $('#search_input').val()); // Debug
+            });
+
+            // Close search when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search_area').length && !$(e.target).closest('.search_input_box').length) {
+                    console.log('Clicked outside search area'); // Debug
+                    $('#search_input_box').hide();
+                    $('#search_input').val('');
+                    searchPage(); // Reset search results
+                }
+            });
+        });
+
+        // Fonction pour le menu utilisateur
+        function toggleUserMenu() {
+            document.getElementById("userDropdown").classList.toggle("show");
         }
 
-        document.getElementById('search').addEventListener('click', function() {
-            document.getElementById('search_input_box').style.display = 'block';
-            document.getElementById('search_input').focus();
-        });
+        // Fermer le dropdown si on clique ailleurs
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-icon') && !event.target.matches('.user-icon *')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
 
-        document.getElementById('close_search').addEventListener('click', function() {
-            document.getElementById('search_input_box').style.display = 'none';
-            document.getElementById('search_input').value = '';
-            searchPage(); // Réafficher tous les éléments
-        });
+        // Cookie Consent Script
+        function acceptCookies() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            document.getElementById('cookieBanner').style.display = 'none';
+            // Load non-essential scripts (e.g., Google Analytics) after consent
+            loadNonEssentialScripts();
+        }
 
-        document.getElementById('search-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function loadNonEssentialScripts() {
+            // Example: Load Google Analytics only after consent
+            if (localStorage.getItem('cookieConsent') === 'accepted') {
+                const gaScript = document.createElement('script');
+                gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=YOUR-GA-ID';
+                gaScript.async = true;
+                document.head.appendChild(gaScript);
+
+                const gaConfig = document.createElement('script');
+                gaConfig.innerHTML = `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'YOUR-GA-ID');
+                `;
+                document.head.appendChild(gaConfig);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if the user has already accepted cookies
+            if (!localStorage.getItem('cookieConsent')) {
+                document.getElementById('cookieBanner').style.display = 'block';
+            } else {
+                // Load non-essential scripts if consent was already given
+                loadNonEssentialScripts();
+            }
         });
     </script>
 </body>

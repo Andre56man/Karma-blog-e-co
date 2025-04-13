@@ -2,14 +2,14 @@
 {% load static %}
 {% block content %}
     <!-- Start Banner Area -->
-    <section class="banner-area organic-breadcrumb">
+    <section class="banner-area organic-breadcrumb" style="background: linear-gradient(90deg, #6A1B9A, #1A237E);">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
                 <div class="col-first">
-                    <h1>Détails de la commande #{{ order.id }}</h1>
+                    <h1 style="color: #FFD700; font-family: 'Playfair Display', serif;">Détails de la commande #{{ order.id }}</h1>
                     <nav class="d-flex align-items-center">
-                        <a href="{% url 'index' %}">Accueil<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="#">Commande #{{ order.id }}</a>
+                        <a href="{% url 'index' %}" style="color: #FFD700;">Accueil<span class="lnr lnr-arrow-right" style="color: #FFD700;"></span></a>
+                        <a href="#" style="color: #FFD700;">Commande #{{ order.id }}</a>
                     </nav>
                 </div>
             </div>
@@ -17,13 +17,13 @@
     </section>
     <!-- End Banner Area -->
 
-    <div class="container">
+    <div class="container" style="background-color: #f5f5f5; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="mt-4">Détails de la commande</h3>
+                <h3 class="mt-4" style="color: #1A237E; font-family: 'Playfair Display', serif;">Détails de la commande</h3>
                 <table class="table table-bordered">
                     <thead>
-                        <tr>
+                        <tr style="background: linear-gradient(90deg, #6A1B9A, #1A237E); color: #FFD700;">
                             <th>Produit</th>
                             <th>Quantité</th>
                             <th>Prix unitaire</th>
@@ -32,20 +32,40 @@
                     </thead>
                     <tbody>
                         {% for item in order.orderitem_set.all %}
-                            <tr>
+                            <tr style="background-color: #FFFFFF; color: #1A237E;">
                                 <td>{{ item.product.name }}</td>
                                 <td>{{ item.quantity }}</td>
-                                <td>${{ item.price|floatformat:2 }}</td>
+                                <td style="color: #FFD700;">${{ item.price|floatformat:2 }}</td>
+                                <td style="color: #FFD700;">${{ item.get_total|floatformat:2 }}</td>
                             </tr>
                         {% endfor %}
-                        <tr>
-                            <td colspan="3"><strong>Total payer</strong></td>
-                            <td>${{ order.total|floatformat:2 }}</td>
+                        <tr style="background-color: #FFFFFF; color: #1A237E;">
+                            <td colspan="3"><strong>Total payé</strong></td>
+                            <td style="color: #FFD700;"><strong>${{ order.total|floatformat:2 }}</strong></td>
                         </tr>
-                        
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- CSS personnalisé -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .table th, .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-top: 1px solid #FFD700;
+        }
+        .table thead th {
+            border-bottom: 2px solid #FFD700;
+        }
+    </style>
 {% endblock %}

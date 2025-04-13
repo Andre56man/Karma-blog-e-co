@@ -1,0 +1,204 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+
+    :root {
+        --royal-purple: rgb(143, 83, 61);
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg, var(--royal-purple), var(--velvet-blue));
+        color: var(--royal-gold);
+        padding: 60px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/royal-pattern.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    .breadcrumb-banner h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 700;
+        font-size: 36px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: var(--royal-gold);
+    }
+    .breadcrumb-banner nav a {
+        color: var(--royal-gold);
+        font-family: 'Marcellus SC', serif;
+    }
+    .breadcrumb-banner nav a:hover {
+        color: var(--heraldic-silver);
+    }
+    .mission-partners-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .mission-partners-area h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--royal-purple);
+        font-size: 32px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+    .mission-partners-area h2 {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--velvet-blue);
+        font-size: 24px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+    .mission-partners-area p {
+        font-family: 'Marcellus SC', serif;
+        color: var(--velvet-blue);
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .mission-partners-area strong {
+        color: var(--royal-gold);
+    }
+    .mission-partners-area a {
+        color: var(--royal-gold);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .mission-partners-area a:hover {
+        color: var(--heraldic-silver);
+    }
+    .mission-partners-container {
+        background-color: #FFFFFF;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--royal-gold);
+    }
+    .partners-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .partner-item {
+        text-align: center;
+        width: 150px;
+    }
+    .partner-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 2px solid var(--royal-gold);
+        transition: transform 0.3s ease;
+    }
+    .partner-item img:hover {
+        transform: scale(1.05);
+    }
+    .partner-item p {
+        margin-top: 10px;
+        font-family: 'Marcellus SC', serif;
+        color: var(--velvet-blue);
+        font-size: 14px;
+    }
+</style>
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Notre Mission et Nos Partenaires</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'index' %}">Accueil<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Mission et Partenaires</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<section class="mission-partners-area section_gap">
+    <div class="container">
+        <h1>Notre Mission et Nos Partenaires</h1>
+        <div class="mission-partners-container">
+            <h2>Pourquoi nous avons créé Karma Shop</h2>
+            <p>Chez <strong>Karma Shop</strong>, notre aventure a débuté avec une idée simple : créer un espace en ligne où l’élégance et l’inspiration se rencontrent. Nous avons constaté qu’il manquait une plateforme qui combine un e-commerce de qualité avec un blog riche en contenu, capable d’inspirer et de connecter une communauté passionnée par la mode, la décoration et le lifestyle.</p>
+            <p>Nous avons créé Karma Shop pour :</p>
+            <ul>
+                <li><strong>Offrir des produits uniques :</strong> Chaque article est soigneusement sélectionné pour refléter notre engagement envers la qualité, la durabilité et l’esthétique.</li>
+                <li><strong>Inspirer à travers notre blog :</strong> Nous partageons des idées, des tendances et des histoires pour enrichir votre quotidien, que ce soit en matière de style ou de décoration intérieure.</li>
+                <li><strong>Construire une communauté :</strong> Nous voulons rassembler des personnes partageant les mêmes valeurs, en leur offrant un espace pour découvrir, apprendre et échanger.</li>
+            </ul>
+            <p>Depuis notre lancement en 2023, nous nous efforçons de faire de chaque interaction avec Karma Shop une expérience mémorable, empreinte de raffinement et de cœur.</p>
+
+            <h2>Nos Partenaires</h2>
+            <p>Nous sommes fiers de collaborer avec des partenaires qui partagent notre vision de l’élégance et de la durabilité. Ces collaborations nous permettent de proposer des produits d’exception tout en soutenant des initiatives éthiques et responsables.</p>
+            <div class="partners-grid">
+                <div class="partner-item">
+                    <img src="{% static 'img/mtn.png' %}" alt="MTN">
+                    <a href="https://mtn.com"> MTN</a>
+                </div>
+                <div class="partner-item">
+                    <img src="{% static 'img/orange.png' %}" alt="Orange">
+                    <a href="https://orange.com"> ORANGE</a>
+                </div>
+                <div class="partner-item">
+                    <img src="{% static 'img/wave.png' %}" alt="WAVE">
+                    <a href="https://wave.com"> WAVE</a>
+                </div>
+                <div class="partner-item">
+                    <img src="{% static 'img/visa.png' %}" alt="VISA MASTER">
+                    <a href="https://visa.com"> VISA </a>
+                </div>
+            </div>
+            <p style="margin-top: 20px;">Ces partenaires nous aident à maintenir notre engagement envers la qualité et la durabilité, tout en enrichissant notre catalogue avec des produits uniques. Pour en savoir plus sur nos collaborations, <a href="{% url 'contact' %}">contactez-nous</a>.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate sections on load
+        const sections = document.querySelectorAll('.mission-partners-container h2, .mission-partners-container p, .mission-partners-container ul, .mission-partners-container .partners-grid');
+        sections.forEach((section, index) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                section.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Animate partner items on hover
+        const partnerItems = document.querySelectorAll('.partner-item img');
+        partnerItems.forEach(item => {
+            item.addEventListener('mouseover', () => {
+                item.style.transform = 'scale(1.05)';
+            });
+            item.addEventListener('mouseout', () => {
+                item.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+{% endblock %}

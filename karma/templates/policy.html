@@ -1,0 +1,270 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Royal Theme Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Marcellus+SC&display=swap');
+
+    :root {
+        --royal-purple: rgb(143, 83, 61);
+        --royal-gold: #FFD700;
+        --regal-red: #8B0000;
+        --velvet-blue: #1E1E5A;
+        --ivory: #F8F1E9;
+        --heraldic-silver: #C0C0C0;
+    }
+
+    .banner-area {
+        background: linear-gradient(135deg, var(--royal-purple), var(--velvet-blue));
+        color: var(--royal-gold);
+        padding: 60px 0;
+        border-bottom: 4px solid var(--royal-gold);
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'img/royal-pattern.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    .breadcrumb-banner h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-weight: 700;
+        font-size: 36px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: var(--royal-gold);
+    }
+    .breadcrumb-banner nav a {
+        color: var(--royal-gold);
+        font-family: 'Marcellus SC', serif;
+    }
+    .breadcrumb-banner nav a:hover {
+        color: var(--heraldic-silver);
+    }
+    .privacy-area {
+        background: var(--ivory);
+        padding: 50px 0;
+    }
+    .privacy-area h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--royal-purple);
+        font-size: 32px;
+        border-bottom: 2px solid var(--royal-gold);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+    .privacy-area h2 {
+        font-family: 'Cinzel Decorative', cursive;
+        color: var(--velvet-blue);
+        font-size: 24px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+    .privacy-area p, .privacy-area li {
+        font-family: 'Marcellus SC', serif;
+        color: var(--velvet-blue);
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    .privacy-area ul, .privacy-area ol {
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+    .privacy-area li {
+        margin-bottom: 10px;
+    }
+    .privacy-area strong {
+        color: var(--royal-gold);
+    }
+    .privacy-area a {
+        color: var(--royal-gold);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .privacy-area a:hover {
+        color: var(--heraldic-silver);
+    }
+    .privacy-container {
+        background-color: #FFFFFF;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--royal-gold);
+    }
+</style>
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Politique de confidentialité</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'index' %}">Accueil<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Politique de confidentialité</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<section class="privacy-area section_gap">
+    <div class="container">
+        <h1>Politique de confidentialité de Karma Shop</h1>
+        <div class="privacy-container">
+            <p><strong>Date de dernière mise à jour : 12 avril 2025</strong></p>
+
+            <p>Chez <strong>Karma Shop</strong>, nous nous engageons à protéger votre vie privée et à garantir la sécurité de vos informations personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos données lorsque vous utilisez notre site e-commerce et notre blog (ci-après "le Site"). En utilisant notre Site, vous acceptez les pratiques décrites dans cette politique.</p>
+
+            <h2>1. Informations que nous collectons</h2>
+            <p>Nous collectons différents types de données pour fournir et améliorer nos services :</p>
+            <ul>
+                <li><strong>Informations que vous fournissez directement :</strong>
+                    <ul>
+                        <li>Lors de la création d’un compte : nom, prénom, adresse e-mail, mot de passe.</li>
+                        <li>Lors d’une commande : adresse de livraison, numéro de téléphone, informations de paiement (traitées par nos partenaires de paiement sécurisés).</li>
+                        <li>Lors de l’interaction avec le blog : commentaires, messages via le formulaire de contact (nom, e-mail, contenu du message).</li>
+                    </ul>
+                </li>
+                <li><strong>Informations collectées automatiquement :</strong>
+                    <ul>
+                        <li>Données de navigation : adresse IP, type de navigateur, pages visitées, temps passé sur le Site, et autres données via des cookies et technologies similaires.</li>
+                        <li>Données de panier : produits ajoutés au panier, même si vous n’êtes pas connecté (stockées via un identifiant de session ou dans votre compte si vous êtes connecté).</li>
+                    </ul>
+                </li>
+                <li><strong>Informations provenant de tiers :</strong>
+                    <ul>
+                        <li>Si vous vous connectez via un compte tiers (par exemple, Google ou Facebook), nous pouvons collecter des informations comme votre nom et adresse e-mail, selon les permissions accordées.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>2. Comment nous utilisons vos informations</h2>
+            <p>Nous utilisons vos données pour les finalités suivantes :</p>
+            <ul>
+                <li><strong>Fournir nos services :</strong>
+                    <ul>
+                        <li>Gérer votre compte, traiter vos commandes, et assurer la livraison des produits.</li>
+                        <li>Maintenir votre panier, même après déconnexion, pour une expérience utilisateur fluide.</li>
+                        <li>Publier vos commentaires sur le blog et répondre à vos demandes via le formulaire de contact.</li>
+                    </ul>
+                </li>
+                <li><strong>Améliorer notre Site :</strong>
+                    <ul>
+                        <li>Analyser les données de navigation pour optimiser l’expérience utilisateur et personnaliser le contenu (par exemple, recommandations de produits).</li>
+                        <li>Effectuer des analyses statistiques sur l’utilisation du Site.</li>
+                    </ul>
+                </li>
+                <li><strong>Communication :</strong>
+                    <ul>
+                        <li>Vous envoyer des e-mails transactionnels (confirmation de commande, suivi de livraison).</li>
+                        <li>Vous envoyer des newsletters ou promotions, si vous y avez consenti (vous pouvez vous désinscrire à tout moment).</li>
+                    </ul>
+                </li>
+                <li><strong>Sécurité et conformité légale :</strong>
+                    <ul>
+                        <li>Détecter et prévenir les fraudes ou abus sur le Site.</li>
+                        <li>Respecter nos obligations légales (par exemple, conservation des données pour la facturation).</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>3. Partage de vos informations</h2>
+            <p>Nous ne vendons ni ne louons vos données personnelles à des tiers. Cependant, nous pouvons partager vos informations dans les cas suivants :</p>
+            <ul>
+                <li><strong>Avec des prestataires de services :</strong>
+                    <ul>
+                        <li>Partenaires de paiement (par exemple, Stripe, PayPal) pour traiter vos paiements de manière sécurisée.</li>
+                        <li>Services de livraison pour expédier vos commandes.</li>
+                        <li>Fournisseurs d’analyse (par exemple, Google Analytics) pour comprendre l’utilisation du Site.</li>
+                    </ul>
+                </li>
+                <li><strong>Pour des raisons légales :</strong>
+                    <ul>
+                        <li>Si requis par la loi, une autorité judiciaire, ou pour protéger nos droits, votre sécurité, ou celle d’autrui.</li>
+                    </ul>
+                </li>
+                <li><strong>En cas de transfert d’entreprise :</strong>
+                    <ul>
+                        <li>En cas de fusion, acquisition, ou vente d’actifs, vos données pourraient être transférées à la nouvelle entité, avec les mêmes garanties de confidentialité.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>4. Cookies et technologies similaires</h2>
+            <p>Nous utilisons des cookies et technologies similaires pour :</p>
+            <ul>
+                <li>Assurer le bon fonctionnement du Site (cookies de session pour le panier, l’authentification).</li>
+                <li>Analyser les performances et personnaliser votre expérience (cookies analytiques et de personnalisation).</li>
+                <li>Afficher des publicités ciblées, si applicable (cookies publicitaires).</li>
+            </ul>
+            <p>Vous pouvez gérer vos préférences de cookies via les paramètres de votre navigateur ou via notre bannière de consentement (si applicable). Notez que désactiver certains cookies peut affecter le fonctionnement du Site.</p>
+
+            <h2>5. Conservation des données</h2>
+            <ul>
+                <li><strong>Données de compte et de commande :</strong> Conservées aussi longtemps que votre compte est actif ou nécessaire pour respecter nos obligations légales (par exemple, 10 ans pour les données de facturation en France).</li>
+                <li><strong>Données de panier :</strong> Conservées pendant 2 semaines pour les utilisateurs non connectés (via un identifiant de session), ou indéfiniment si associées à un compte utilisateur.</li>
+                <li><strong>Données de navigation :</strong> Conservées jusqu’à 13 mois (conformément aux recommandations de la CNIL pour les cookies).</li>
+            </ul>
+
+            <h2>6. Vos droits</h2>
+            <p>Conformément aux lois applicables (comme le RGPD en Europe), vous disposez des droits suivants :</p>
+            <ul>
+                <li><strong>Accès et rectification :</strong> Vous pouvez consulter et modifier vos informations personnelles via votre compte ou en nous contactant.</li>
+                <li><strong>Suppression :</strong> Vous pouvez demander la suppression de vos données, sauf si nous devons les conserver pour des raisons légales.</li>
+                <li><strong>Opposition et limitation :</strong> Vous pouvez vous opposer à certains traitements (par exemple, marketing direct) ou demander une limitation.</li>
+                <li><strong>Portabilité :</strong> Vous pouvez demander une copie de vos données dans un format structuré.</li>
+                <li><strong>Retrait du consentement :</strong> Si un traitement repose sur votre consentement (par exemple, newsletter), vous pouvez le retirer à tout moment.</li>
+            </ul>
+            <p>Pour exercer ces droits, contactez-nous à <strong>contact@karmashop.com</strong>. Nous répondrons dans un délai d’un mois, sauf cas exceptionnel.</p>
+
+            <h2>7. Sécurité des données</h2>
+            <p>Nous mettons en place des mesures techniques et organisationnelles pour protéger vos données, telles que :</p>
+            <ul>
+                <li>Chiffrement des données sensibles (par exemple, mots de passe, informations de paiement).</li>
+                <li>Accès restreint aux données personnelles pour notre personnel.</li>
+                <li>Utilisation de protocoles sécurisés (HTTPS) pour les transmissions de données.</li>
+            </ul>
+            <p>Cependant, aucun système n’est infaillible. En cas de violation de données, nous vous informerons conformément à la loi.</p>
+
+            <h2>8. Transferts internationaux</h2>
+            <p>Si vous utilisez notre Site depuis un pays hors de l’Espace Économique Européen (EEE), vos données peuvent être transférées vers des pays où les lois sur la protection des données diffèrent. Nous nous assurons que ces transferts respectent les exigences légales (par exemple, clauses contractuelles types).</p>
+
+            <h2>9. Modifications de cette politique</h2>
+            <p>Nous pouvons mettre à jour cette politique de confidentialité pour refléter des changements dans nos pratiques ou les lois applicables. La version la plus récente sera toujours disponible sur cette page, avec la date de mise à jour indiquée.</p>
+
+            <h2>10. Nous contacter</h2>
+            <p>Pour toute question concernant cette politique ou le traitement de vos données, contactez-nous :</p>
+            <ul>
+                <li><strong>E-mail :</strong> <a href="mailto:contact@karmashop.com">contact@karmashop.com</a></li>
+                <li><strong>Adresse :</strong> Karma Shop, 123 Rue Royale, 75001 Paris, France</li>
+                <li><strong>Téléphone :</strong> +33 1 23 45 67 89</li>
+            </ul>
+            <p>Si vous n’êtes pas satisfait de notre réponse, vous pouvez contacter l’autorité de protection des données de votre pays (par exemple, la CNIL en France : <a href="https://www.cnil.fr" target="_blank">www.cnil.fr</a>).</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate sections on load
+        const sections = document.querySelectorAll('.privacy-container h2, .privacy-container p, .privacy-container ul');
+        sections.forEach((section, index) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                section.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    });
+</script>
+{% endblock %}

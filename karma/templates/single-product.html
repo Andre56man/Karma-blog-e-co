@@ -16,7 +16,7 @@
     }
 
     .banner-area {
-        background: linear-gradient(135deg,rgb(219, 148, 81) ,rgb(219, 148, 81));
+        background: linear-gradient(135deg, rgb(219, 148, 81), rgb(219, 148, 81));
         color: var(--royal-gold);
         padding: 60px 0;
         border-bottom: 4px solid var(--royal-gold);
@@ -57,6 +57,9 @@
         font-size: 16px;
         line-height: 1.6;
     }
+    .description-area {
+        margin-top: 30px;
+    }
     .single-product-area h3 {
         font-family: 'Marcellus SC', serif;
         color: var(--royal-gold);
@@ -73,6 +76,7 @@
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s;
+        position: relative;
     }
     .img-fluid:hover {
         transform: scale(1.02);
@@ -111,6 +115,18 @@
         height: 80px;
         opacity: 0.7;
     }
+    .out-of-stock-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: var(--regal-red);
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        border-radius: 5px;
+        font-family: 'Marcellus SC', serif;
+        font-size: 14px;
+    }
 </style>
 
 <!-- Start Banner Area -->
@@ -131,27 +147,41 @@
 <section class="single-product-area section_gap">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 position-relative">
                 {% if product.image %}
                     <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
                 {% else %}
                     <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
                 {% endif %}
+                {% if product.stock == 0 %}
+                    <div class="out-of-stock-badge">Épuisé</div>
+                {% endif %}
             </div>
             <div class="col-lg-6">
-                <h1>{{ product.name }}</h1>
-                <p>{{ product.description }}</p>
-                <h3>{{ product.price }}fcfa</h3>
+                <h1 {% if product.stock == 0 %}style="text-decoration: line-through; color: grey;"{% endif %}>{{ product.name }}</h1>
+                <h3 {% if product.stock == 0 %}style="text-decoration: line-through; color: grey;"{% endif %}>{{ product.price }}fcfa</h3>
                 <p class="stock">Stock: {{ product.stock }}</p>
-                <form method="POST" action="{% if user.is_authenticated %}{% url 'add_to_cart' product.id %}{% else %}{% url 'login' %}?next={% url 'single-product' product.id %}{% endif %}" class="d-flex align-items-center">
-                    {% csrf_token %}
-                    <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" required>
-                    <button type="submit" class="primary-btn">Ajouter au panier</button>
-                </form>
-                {% if not user.is_authenticated %}
-                    <p style="color: var(--regal-red); margin-top: 10px;">Veuillez vous connecter pour ajouter au panier.</p>
+                {% if user.is_authenticated and not user.is_staff %}
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" min="1" max="{{ product.stock }}" value="1" {% if product.stock == 0 %}disabled{% endif %} required>
+                        <button type="submit" class="primary-btn" {% if product.stock == 0 %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+                            Ajouter au panier
+                        </button>
+                    </form>
                 {% endif %}
-                
+                {% if product.stock == 0 %}
+                    <p style="color: var(--regal-red); margin-top: 10px;">Produit actuellement indisponible.</p>
+                {% elif not user.is_authenticated %}
+                <p class="mt-3"><a href="{% url 'login' %}">Connectez-vous</a> pour ajouter au panier.</p>
+                {% elif user.is_staff %}
+                    <p style="color: var(--regal-red); margin-top: 10px;">Les administrateurs ne peuvent pas ajouter de produits au panier.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 description-area">
+                <p>{{ product.description }}</p>
             </div>
         </div>
     </div>
@@ -170,7 +200,7 @@
                 productImage.style.transform = 'scale(1)';
             }, 100);
         }
-        
+
         // Animate product details
         const productDetails = document.querySelector('.col-lg-6:last-child');
         if (productDetails) {

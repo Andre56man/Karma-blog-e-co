@@ -2,40 +2,98 @@
 {% load static %}
 
 {% block content %}
-    <section class="blog-add-area section_gap">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="section-title text-center">
-                        <h1>Create a New Blog Post</h1>
-                        <p>Share your thoughts and insights</p>
-                    </div>
-                    <form method="post" enctype="multipart/form-data" class="blog-add-form">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" required placeholder="Enter post title">
-                        </div>
-                        <div class="form-group">
-                            <label for="excerpt">Excerpt</label>
-                            <textarea name="excerpt" id="excerpt" class="form-control" rows="3" placeholder="A short summary of your post"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="content">Content</label>
-                            <textarea name="content" id="content" class="form-control" rows="10" required placeholder="Write your blog post here"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="image">Featured Image</label>
-                            <input type="file" name="image" id="image" class="form-control-file" accept="image/*">
-                            <small class="form-text text-muted">Optional: Upload an image to feature with your post.</small>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="primary-btn">Publish Post</button>
-                            <a href="{% url 'blog' %}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
+
+<style>
+    .primary-btn {
+        background-color: #7c32ff;
+        color: #fff;
+        border: none;
+        transition: 0.3s ease-in-out;
+    }
+
+    .primary-btn:hover {
+        background-color: #5e24c0;
+        color: #fff;
+    }
+
+    .form-control:focus, .form-control-file:focus {
+        border-color: #7c32ff;
+        box-shadow: 0 0 0 0.2rem rgba(124, 50, 255, 0.25);
+    }
+
+    .rounded-pill {
+        border-radius: 50rem !important;
+    }
+
+    .shadow {
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .form-section {
+        background-color: #fff;
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+
+    .section-title h2 {
+        font-weight: 700;
+        margin: 50px;
+    }
+
+    .section-title p {
+        color: #6c757d;
+    }
+</style>
+
+<section class="section_gap bg-light py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5 section-title">
+                    <h2>Créer un Nouvel Article</h2>
+                    <p>Exprimez vos idées à travers un billet de blog élégant</p>
                 </div>
+
+                <form method="post" enctype="multipart/form-data" class="form-section shadow">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-4">
+                        <label for="title" class="font-weight-bold">Titre</label>
+                        <input type="text" name="title" id="title" class="form-control rounded-pill px-4 py-2 shadow-sm" placeholder="Titre de l'article" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="excerpt" class="font-weight-bold">Résumé</label>
+                        <textarea name="excerpt" id="excerpt" class="form-control rounded px-4 py-2 shadow-sm" rows="3" placeholder="Un court résumé (facultatif)"></textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="category" class="font-weight-bold">Catégorie</label>
+                        <select name="category" id="category" class="form-control rounded-pill px-4 py-2 shadow-sm" required>
+                            <option value="MODERN">Modern</option>
+                            <option value="PASSER">Passer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="content" class="font-weight-bold">Contenu</label>
+                        {{ form.content|safe }}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="image" class="font-weight-bold">Image mise en avant</label>
+                        <input type="file" name="image" id="image" class="form-control-file">
+                        <small class="form-text text-muted">Facultatif : téléversez une image représentative.</small>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="primary-btn rounded-pill px-5 py-2">Publier</button>
+                        <a href="{% url 'blog' %}" class="btn btn-outline-secondary rounded-pill px-4 py-2 ml-2">Annuler</a>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 {% endblock %}

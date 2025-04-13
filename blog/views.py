@@ -57,17 +57,16 @@ def blog_detail(request, id):  # Changed from blog_title to id
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
-def blog_edit(request, id):  # Gardé avec id pour l’édition
+def blog_edit(request, id):
     post = get_object_or_404(BlogPost, id=id)
     if request.method == 'POST':
-        post.title = request.POST.get('title')
-        post.excerpt = request.POST.get('excerpt')
-        post.content = request.POST.get('content')
-        if 'image' in request.FILES:
-            post.image = request.FILES['image']
-        post.save()
-        return redirect('blog')
-    return render(request, 'blog_edit.html', {'post': post})
+        form = BlogPostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('blog')
+    else:
+        form = BlogPostForm(instance=post)
+    return render(request, 'blog_edit.html', {'form': form, 'post': post})
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -78,24 +77,24 @@ def blog_delete(request, id):
         return JsonResponse({'status': 'success'}, status=200)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import BlogPost
+from .forms import BlogPostForm  # Import the new form
+
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def blog_add(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        excerpt = request.POST.get('excerpt')
-        content = request.POST.get('content')
-        image = request.FILES.get('image') if 'image' in request.FILES else None
-        post = BlogPost(
-            title=title,
-            excerpt=excerpt,
-            content=content,
-            image=image,
-            author=request.user
-        )
-        post.save()
-        return redirect('blog')
-    return render(request, 'blog_add.html')
+        form = BlogPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('blog')
+    else:
+        form = BlogPostForm()
+    return render(request, 'blog_add.html', {'form': form})
 
 @login_required
 def add_comment(request, blog_id):

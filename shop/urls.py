@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('karma.urls')),  # Inclut toutes les URLs de karma
     path('blog/',include('blog.urls')),
+    path('ckeditor5/', include('django_ckeditor_5.urls')),  # Updated for CKEditor 5
 ]
 
 # Ajout des fichiers statiques et médias en mode DEBUG

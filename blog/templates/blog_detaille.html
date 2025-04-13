@@ -5,7 +5,7 @@
 <style>
     /* Thème Royal */
     .banner-area {
-        background: linear-gradient(135deg,rgb(242, 202, 121),rgb(210, 114, 12));
+        background: linear-gradient(135deg,rgb(242, 202, 121),rgb(32, 1, 57));
         color: #FFD700;
         padding: 60px 0;
         border-bottom: 4px solid #FFD700;
@@ -28,11 +28,14 @@
         padding: 20px;
     }
     .single-post img {
-        width: 100%;
+        max-width: 70%;
         height: auto;
         border-bottom: 3px solid #FFD700;
         border-radius: 8px 8px 0 0;
+        display: block;
+        margin: 0 auto;
     }
+    
     .single-post h1 {
         font-family: 'Cinzel', serif;
         color:rgb(0, 0, 0);
@@ -125,7 +128,7 @@
 
 <section class="banner-area">
     <div class="container">
-        <h1>{{ post.title }}</h1>
+        <h1>Blog Detail</h1>
         
     </div>
 </section>

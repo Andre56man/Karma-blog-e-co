@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
     <!-- Start Banner Area -->
-    <section class="banner-area organic-breadcrumb">
+    <section class="banner-area organic-breadcrumb" style="background: linear-gradient(90deg, #6A1B9A, #1A237E);">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
                 <div class="col-first">
-                    <h1> Vos historiques</h1>
+                    <h1 style="color: #FFD700; font-family: 'Playfair Display', serif;">Vos historiques</h1>
                     <nav class="d-flex align-items-center">
-                        <a href="{% url 'cart' %}">Panier<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="{% url 'cart' %}" style="color: #FFD700;">Panier<span class="lnr lnr-arrow-right" style="color: #FFD700;"></span></a>
                     </nav>
                 </div>
             </div>
@@ -16,17 +16,17 @@
     </section>
     <!-- End Banner Area -->
 
-    <div class="container">
+    <div class="container" style="background-color: #f5f5f5; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="mt-4">Bienvenue, {{ user.username }}</h2>
-                <p>Email : {{ user.email }}</p>
+                <h2 class="mt-4" style="color: #1A237E; font-family: 'Playfair Display', serif;">Bienvenue, {{ user.username }}</h2>
+                <p style="color: #6A1B9A;">Email : {{ user.email }}</p>
 
-                <h3 class="mt-4">Historique des commandes</h3>
+                <h3 class="mt-4" style="color: #1A237E; font-family: 'Playfair Display', serif;">Historique des commandes</h3>
                 {% if orders %}
                     <table class="table table-bordered">
                         <thead>
-                            <tr>
+                            <tr style="background: linear-gradient(90deg, #6A1B9A, #1A237E); color: #FFD700;">
                                 <th>Numéro de commande</th>
                                 <th>Date</th>
                                 <th>Total</th>
@@ -36,19 +36,19 @@
                         </thead>
                         <tbody>
                             {% for order in orders %}
-                                <tr>
+                                <tr style="background-color: #FFFFFF; color: #1A237E;">
                                     <td>#{{ order.id }}</td>
                                     <td>{{ order.created_at|date:"d M Y" }}</td>
-                                    <td>${{ order.grand_total|floatformat:2 }}</td>
+                                    <td style="color: #FFD700;">${{ order.grand_total|floatformat:2 }}</td>
                                     <td>
                                         {% if order.is_completed %}
-                                            <span class="badge badge-success">Complétée</span>
+                                            <span class="badge badge-success" style="background-color: #FFD700; color: #1A237E;">Complétée</span>
                                         {% else %}
-                                            <span class="badge badge-warning">En cours</span>
+                                            <span class="badge badge-warning" style="background-color: #6A1B9A; color: #FFD700;">En cours</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary">Voir</a>
+                                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary" style="background-color: #1A237E; border-color: #1A237E; color: #FFD700;">Voir</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -62,7 +62,7 @@
                                 <ul class="pagination justify-content-center">
                                     {% if orders.has_previous %}
                                         <li class="page-item">
-                                            <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous">
+                                            <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous" style="background-color: #1A237E; color: #FFD700; border-color: #FFD700;">
                                                 <span aria-hidden="true">«</span>
                                             </a>
                                         </li>
@@ -70,15 +70,19 @@
 
                                     {% for num in orders.paginator.page_range %}
                                         {% if orders.number == num %}
-                                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="#" style="background-color: #FFD700; color: #1A237E; border-color: #FFD700;">{{ num }}</a>
+                                            </li>
                                         {% else %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ num }}" style="background-color: #6A1B9A; color: #FFD700; border-color: #FFD700;">{{ num }}</a>
+                                            </li>
                                         {% endif %}
                                     {% endfor %}
 
                                     {% if orders.has_next %}
                                         <li class="page-item">
-                                            <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+                                            <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next" style="background-color: #1A237E; color: #FFD700; border-color: #FFD700;">
                                                 <span aria-hidden="true">»</span>
                                             </a>
                                         </li>
@@ -88,7 +92,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <p>Aucune commande trouvée.</p>
+                    <p style="color: #6A1B9A;">Aucune commande trouvée.</p>
                 {% endif %}
             </div>
         </div>
@@ -96,43 +100,55 @@
 
     <!-- CSS personnalisé -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
         .table th, .table td {
             padding: 0.75rem;
             vertical-align: middle;
-            border-top: 1px solid #dee2e6;
+            border-top: 1px solid #FFD700;
         }
         .table thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 2px solid #FFD700;
         }
         .badge-success {
-            background-color: #28a745;
-            color: white;
+            background-color: #FFD700;
+            color: #1A237E;
             padding: 0.25em 0.5em;
             border-radius: 0.2rem;
         }
         .badge-warning {
-            background-color: #ffc107;
-            color: black;
+            background-color: #6A1B9A;
+            color: #FFD700;
             padding: 0.25em 0.5em;
             border-radius: 0.2rem;
         }
         .pagination .page-link {
-            color: #333;
+            color: #FFD700;
             border-radius: 5px;
             margin: 0 5px;
             padding: 8px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid #FFD700;
             transition: all 0.3s ease;
         }
         .pagination .page-link:hover {
-            background-color: #f5f5f5;
-            color: #ffba00;
+            background-color: #FFD700;
+            color: #1A237E;
         }
         .pagination .page-item.active .page-link {
-            background-color: #ffba00;
-            border-color: #ffba00;
-            color: white;
+            background-color: #FFD700;
+            border-color: #FFD700;
+            color: #1A237E;
+        }
+        .btn-primary:hover {
+            background-color: #FFD700 !important;
+            color: #1A237E !important;
+            border-color: #FFD700 !important;
         }
     </style>
 {% endblock %}

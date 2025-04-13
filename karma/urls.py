@@ -7,15 +7,14 @@ from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('', views.index, name="index"),
-    path('category/', views.categorie, name="category"),
+    path('policy/', views.policy, name="policy"),
     path('single-product/<int:product_id>/', views.singleproduct, name="single-product"),
     path('checkout/', views.checkout, name="checkout"),
     path('cart/', views.cart, name="cart"),
     path('confirmation/', views.confirmation, name="confirmation"),
     path('contact/', views.contact, name='contact'),
-    path('tracking/', views.tracking, name='tracking'),
+    path('about/', views.about, name='about'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-    path('elements/', views.elements, name='elements'),
     path('register/', views.register, name="register"),
     path("logout/", views.logout_view, name="logout"),
     path("password_reset/", views.password_reset, name="password_reset"),
@@ -55,6 +54,7 @@ urlpatterns = [
     path('api/webhook/payment/', views.payment_webhook, name='payment_webhook'),
     path('resend-email/<int:order_id>/', views.resend_confirmation_email, name='resend_confirmation_email'),
     path('confirmation/', views.confirmation, name='confirmation'),
+    path('search/', views.search, name='search'),
     
 ]
 

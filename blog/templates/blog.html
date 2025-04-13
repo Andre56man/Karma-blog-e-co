@@ -5,7 +5,7 @@
 <style>
     /* Royal Theme Styles */
     .banner-area {
-        background: linear-gradient(135deg, rgb(222, 197, 165), rgb(235, 156, 59));
+        background: linear-gradient(135deg, rgb(237, 173, 78), rgb(66, 4, 124));
         color: #FFD700;
         padding: 60px 0;
         border-bottom: 4px solid #FFD700;
@@ -52,10 +52,25 @@
         transform: translateY(-10px);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     }
+    .single-blog-post .image-container {
+        position: relative;
+    }
     .single-blog-post img {
         width: 100%;
         height: auto;
         border-bottom: 3px solid #FFD700;
+    }
+    .category-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(75, 0, 130, 0.8);
+        color: #FFD700;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-family: 'Cinzel', serif;
+        font-size: 14px;
+        text-transform: uppercase;
     }
     .post-details {
         padding: 20px;
@@ -183,6 +198,24 @@
         background: #8A2BE2;
         color: #FFFFFF;
     }
+    /* Filter Styles */
+    .category-filter {
+        margin-bottom: 30px;
+    }
+    .category-filter select {
+        background-color: #4B0082;
+        color: #FFD700;
+        border: 2px solid #FFD700;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: 'Cinzel', serif;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .category-filter select:focus {
+        outline: none;
+        border-color: #8A2BE2;
+    }
 </style>
 
 <section class="banner-area organic-breadcrumb">
@@ -205,15 +238,30 @@
                 </div>
             </div>
         </div>
+        <!-- Category Filter -->
+        <div class="row justify-content-center category-filter">
+            <div class="col-lg-6 text-center">
+                <form method="get">
+                    <select name="category" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        <option value="MODERN" {% if selected_category == 'MODERN' %}selected{% endif %}>Modern</option>
+                        <option value="PASSER" {% if selected_category == 'PASSER' %}selected{% endif %}>Passer</option>
+                    </select>
+                </form>
+            </div>
+        </div>
         <div class="row">
             {% for post in latest_posts %}
                 <div class="col-lg-4 col-md-6 searchable-item">
                     <div class="single-blog-post">
-                        {% if post.image %}
-                            <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
-                        {% else %}
-                            <img class="img-fluid" src="{% static 'img/blog/default.jpg' %}" alt="">
-                        {% endif %}
+                        <div class="image-container">
+                            {% if post.image %}
+                                <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
+                            {% else %}
+                                <img class="img-fluid" src="{% static 'img/blog/default.jpg' %}" alt="">
+                            {% endif %}
+                            <span class="category-label">{{ post.get_category_display }}</span>
+                        </div>
                         <div class="post-details">
                             <h6>{{ post.title }}</h6>
                             <div class="post-meta">
@@ -240,7 +288,7 @@
                     </div>
                 </div>
             {% empty %}
-                <p>No royal decrees available yet.</p>
+                <p>No royal decrees available for this category.</p>
             {% endfor %}
         </div>
         <!-- Pagination -->
@@ -250,19 +298,19 @@
                     <ul class="pagination">
                         {% if latest_posts.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ latest_posts.previous_page_number }}" aria-label="Previous">
+                                <a class="page-link" href="?page={{ latest_posts.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Previous">
                                     <span aria-hidden="true">«</span>
                                 </a>
                             </li>
                         {% endif %}
                         {% for num in latest_posts.paginator.page_range %}
                             <li class="page-item {% if latest_posts.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
                             </li>
                         {% endfor %}
                         {% if latest_posts.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ latest_posts.next_page_number }}" aria-label="Next">
+                                <a class="page-link" href="?page={{ latest_posts.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Next">
                                     <span aria-hidden="true">»</span>
                                 </a>
                             </li>

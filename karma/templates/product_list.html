@@ -1,30 +1,180 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    <section class="product-list section_gap">
+    <style>
+        /* Royal Theme Styling */
+        .section_gap {
+            background: linear-gradient(to bottom, #f8f1e9, #fff);
+            padding: 50px 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h2 {
+            color: #4b0082; /* Indigo/Purple */
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            text-align: center;
+            margin: 60px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .single-product {
+            background: #fff;
+            border: 2px solid #d4af37; /* Gold */
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .single-product:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .single-product::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #d4af37, #4b0082);
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #d4af37;
+        }
+        .single-product h3 {
+            color: #4b0082;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            margin: 10px 0;
+            text-transform: capitalize;
+        }
+        .product-price {
+            color: #d4af37; /* Gold */
+            font-family: 'Cinzel', serif;
+            font-size: 1.4em;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background: #4b0082;
+            border: 2px solid #d4af37;
+            color: #fff;
+            font-family: 'Cinzel', serif;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            transition: background 0.3s, color 0.3s;
+        }
+        .btn-primary:hover {
+            background: #d4af37;
+            color: #4b0082;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .pagination a, .pagination span {
+            color: #4b0082;
+            font-family: 'Cinzel', serif;
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .pagination a:hover {
+            background: #d4af37;
+            color: #fff;
+        }
+        .pagination .current {
+            background: #4b0082;
+            color: #fff;
+            border: 1px solid #4b0082;
+        }
+        p {
+            font-family: 'Lora', serif;
+            color: #333;
+        }
+    </style>
+
+    <section class="section_gap">
         <div class="container">
-            <h2>Nos Produits</h2>
-            <div class="row">
-                {% for product in products %}
-                    <div class="col-md-4 searchable-item">
-                        <div class="card">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="max-height: 200px; object-fit: cover;">
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text">{{ product.description }}</p>
-                                <p class="card-text">Prix : {{ product.price }} fcfa</p>
-                                <p class="card-text">Stock : {{ product.stock }}</p>
-                                {% if request.user.is_authenticated %}
-                                    <a href="{% url 'product_edit' product.id %}" class="btn btn-primary">Modifier</a>
-                                {% endif %}
+            <!-- Display search query if present -->
+            {% if query %}
+                <h2>Search Results for "{{ query }}"</h2>
+                {% if products %}
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-lg-3 col-md-4 col-sm-6 searchable-item">
+                                <div class="single-product">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                                    {% else %}
+                                        <img src="/static/images/default-product.jpg" alt="Default" class="product-image">
+                                    {% endif %}
+                                    <h3>{{ product.name }}</h3>
+                                    <p class="product-price">${{ product.price|floatformat:2 }}</p>
+                                    <a href="{% url 'single-product' product.id %}" class="btn btn-primary">View Details</a>
+                                </div>
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                {% empty %}
-                    <p>Aucun produit disponible.</p>
-                {% endfor %}
-            </div>
+                {% else %}
+                    <p>No products found for "{{ query }}".</p>
+                {% endif %}
+            {% else %}
+                <h2>Our Royal Collection</h2>
+                {% if products %}
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-lg-3 col-md-4 col-sm-6 searchable-item">
+                                <div class="single-product">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                                    {% else %}
+                                        <img src="/static/images/default-product.jpg" alt="Default" class="product-image">
+                                    {% endif %}
+                                    <h3>{{ product.name }}</h3>
+                                    <p class="product-price">{{ product.price|floatformat:2 }}fcfa</p>
+                                    <a href="{% url 'single-product' product.id %}" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No products available.</p>
+                {% endif %}
+            {% endif %}
+
+            <!-- Pagination -->
+            {% if products.has_other_pages %}
+                <div class="pagination">
+                    {% if products.has_previous %}
+                        <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">« Previous</a>
+                    {% endif %}
+                    {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                            <span class="current">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if products.has_next %}
+                        <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next »</a>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #f5f5f5;
-            font-family: 'Arial', sans-serif;
+            background: #F8F1E9; /* Soft cream background */
+            font-family: 'Roboto', sans-serif;
+            color: #2B2A4C; /* Royal blue text */
         }
         .login-container {
             max-width: 1200px;
@@ -17,7 +19,7 @@
         }
         .row {
             display: flex;
-            align-items: stretch; /* Permet aux colonnes d'avoir la même hauteur */
+            align-items: stretch;
         }
         .login-box-img {
             display: flex;
@@ -28,7 +30,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 10px;
+            border: 2px solid #D4A017; /* Gold border */
         }
         .login-box-img .hover {
             position: absolute;
@@ -37,13 +40,16 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #fff;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 5px;
+            background: rgba(43, 42, 76, 0.7); /* Royal blue overlay */
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #D4A017;
         }
         .login-box-img .hover h4 {
             margin-bottom: 15px;
-            font-size: 22px;
+            font-size: 24px;
+            font-family: 'Playfair Display', serif;
+            color: #D4A017; /* Gold heading */
         }
         .login-box-img .hover p {
             margin-bottom: 20px;
@@ -56,39 +62,45 @@
             height: 100%;
             padding: 40px;
             background: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #D4A017; /* Gold accent */
         }
         .login-form-inner h3 {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 30px;
             text-align: left;
+            font-family: 'Playfair Display', serif;
+            color: #2B2A4C; /* Royal blue */
         }
         .form-control {
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 12px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #D4A017; /* Gold border */
+            background: #F8F1E9;
+            transition: border-color 0.3s ease;
         }
         .form-control:focus {
-            border-color: #ff7f50;
-            box-shadow: none;
+            border-color: #4B0082; /* Deep purple */
+            box-shadow: 0 0 5px rgba(75, 0, 130, 0.3);
+            background: #fff;
         }
         .primary-btn {
-            background-color: #ff7f50;
+            background: linear-gradient(45deg, #2B2A4C, #4B0082); /* Royal blue to purple gradient */
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 12px 30px;
-            color: white;
+            color: #D4A017; /* Gold text */
             font-weight: bold;
             text-transform: uppercase;
             width: 100%;
             text-align: center;
-            display: inline-block;
+            transition: background 0.3s ease;
         }
         .primary-btn:hover {
-            background-color: #e66b3f;
-            color: white;
+            background: linear-gradient(45deg, #4B0082, #2B2A4C); /* Reverse gradient */
+            color: #F8F1E9; /* Soft cream text */
             text-decoration: none;
         }
         .creat_account {
@@ -97,19 +109,24 @@
         .creat_account label {
             margin-left: 5px;
             font-size: 14px;
+            color: #2B2A4C;
         }
         .forgot-password {
             display: block;
             margin-top: 15px;
-            color: #777;
+            color: #4B0082; /* Deep purple */
             font-size: 14px;
+            transition: color 0.3s ease;
         }
         .forgot-password:hover {
-            color: #ff7f50;
+            color: #D4A017; /* Gold on hover */
             text-decoration: none;
         }
         .alert-danger {
             margin-bottom: 20px;
+            background: #fff;
+            border: 1px solid #D4A017;
+            color: #2B2A4C;
         }
     </style>
 </head>
@@ -133,17 +150,15 @@
                     <h3>Connexion</h3>
 
                     {% if messages %}
-    {% for message in messages %}
-        {% if 'error' in message.tags %}
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
+                        {% for message in messages %}
+                            {% if 'error' in message.tags %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
 
-
-                    
                     <form method="POST" class="row login_form">
                         {% csrf_token %}
                         <div class="col-md-12 form-group">
