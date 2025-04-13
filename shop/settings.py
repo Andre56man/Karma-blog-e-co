@@ -40,7 +40,20 @@ INSTALLED_APPS = [
     'karma.apps.KarmaConfig',
     'blog.apps.BlogConfig',
     'django_ckeditor_5',
+    'rest_framework',
+    'django_filters',
+    'knox',
+    'drf_yasg',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

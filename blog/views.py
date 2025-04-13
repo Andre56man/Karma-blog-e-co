@@ -129,4 +129,3 @@ def edit_comment(request, comment_id):
     
     # Render the edit form for GET requests
     return render(request, 'edit_comment.html', {'comment': comment})
-

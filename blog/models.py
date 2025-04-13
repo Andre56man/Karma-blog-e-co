@@ -15,7 +15,7 @@ class UserProfile(models.Model):
 
 # BlogPost
 class BlogPost(models.Model):
-    CATEGORY_CHOICES = [
+    CATEGORY_CHOICES = [    
         ('MODERN', 'Modern'),
         ('PASSER', 'Passer'),
     ]

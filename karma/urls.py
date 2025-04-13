@@ -2,8 +2,11 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from django.conf import settings
+from knox import views as knox_views
 from django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.auth.views import LoginView
+from .api import ProductListCreateAPIView, ProductDetailAPIView, OrderListCreateAPIView, OrderDetailAPIView
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -55,7 +58,13 @@ urlpatterns = [
     path('resend-email/<int:order_id>/', views.resend_confirmation_email, name='resend_confirmation_email'),
     path('confirmation/', views.confirmation, name='confirmation'),
     path('search/', views.search, name='search'),
-    
+    path('api/products/', ProductListCreateAPIView.as_view(), name='api-product-list'),
+    path('api/products/<int:pk>/', ProductDetailAPIView.as_view(), name='api-product-detail'),
+    path('api/orders/', OrderListCreateAPIView.as_view(), name='api-order-list'),
+    path('api/orders/<int:pk>/', OrderDetailAPIView.as_view(), name='api-order-detail'),
+    path('api/login/', knox_views.LoginView.as_view(), name='knox_login'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
 
 if settings.DEBUG:

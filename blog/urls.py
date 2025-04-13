@@ -1,6 +1,10 @@
 # blog/urls.py
 from django.urls import path
 from . import views
+from django.urls import path
+from django.contrib.auth import views as auth_views
+
+from .api import BlogPostListCreateAPIView, BlogPostDetailAPIView, CommentListCreateAPIView
 
 urlpatterns = [
     path('comment/delete/<int:comment_id>/', views.delete_comment, name='delete_comment'),
@@ -13,6 +17,9 @@ urlpatterns = [
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     path('blog/', views.blog, name='blog'),
     path('save-images', views.save_images, name='save_images'),
+    path('api/posts/', BlogPostListCreateAPIView.as_view(), name='api-post-list'),
+    path('api/posts/<int:pk>/', BlogPostDetailAPIView.as_view(), name='api-post-detail'),
+    path('api/comments/', CommentListCreateAPIView.as_view(), name='api-comment-list'),
 
 
 ]
