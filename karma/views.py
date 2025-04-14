@@ -342,6 +342,8 @@ def add_to_cart(request, product_id):
             messages.error(request, 'Quantité demandée supérieure au stock.')
     return redirect('single-product', product_id=product_id)
 
+
+
 def activate_account(request, token):
     try:
         profile = UserProfile.objects.get(activation_token=token)

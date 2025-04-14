@@ -72,14 +72,14 @@
     .single-blog-post img {
         width: 100%;
         height: auto;
-        border-bottom: 3px solid #FFD700;
+        border-bottom: 3px solidrgb(0, 0, 0);
     }
     .category-label {
         position: absolute;
         top: 10px;
         left: 10px;
-        background-color: rgba(75, 0, 130, 0.8);
-        color: #FFD700;
+        background-color: rgba(82, 45, 0, 0.98);
+        color:rgb(255, 255, 255);
         padding: 5px 10px;
         border-radius: 5px;
         font-family: 'Cinzel', serif;
@@ -235,7 +235,7 @@
 <section class="banner-area organic-breadcrumb">
     <video class="banner-video" autoplay loop muted playsinline>
         <source src="{% static 'videos/Vidéo.mp4' %}" type="video/mp4">
-                Your browser does not support the video tag.
+        Your browser does not support the video tag.
     </video>
     <div class="breadcrumb-banner">
         <div class="col-first">
@@ -268,41 +268,61 @@
         </div>
         <div class="row">
             {% for post in latest_posts %}
-                <div class="col-lg-4 col-md-6 searchable-item">
-                    <div class="single-blog-post">
-                        <div class="image-container">
-                            {% if post.image %}
-                                <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
-                            {% else %}
-                                <img class="img-fluid" src="{% static 'img/blog/default.jpg' %}" alt="">
-                            {% endif %}
-                            <span class="category-label">{{ post.get_category_display }}</span>
-                        </div>
-                        <div class="post-details">
-                            <h6>{{ post.title }}</h6>
-                            <div class="post-meta">
-                                <p>By {{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+                {% if forloop.counter0|divisibleby:3 %}
+                    <!-- Start a new row every 3 items (2 posts + 1 image) -->
+                    {% if forloop.counter0 != 0 %}
+                        </div><div class="row">
+                    {% endif %}
+                {% endif %}
+                
+                {% if forloop.counter|divisibleby:3 %}
+                    <!-- Display static image instead of third post -->
+                    <div class="col-lg-4 col-md-6 searchable-item">
+                        <div class="single-blog-post">
+                            <div class="image-container">
+                                <img class="img-fluid" src="{% static 'img/zara.jpg' %}" alt="Royal Placeholder">
                             </div>
-                            <p>{{ post.excerpt|truncatewords:15 }}</p>
-                            <div class="post-bottom d-flex justify-content-start align-items-center">
-                                <a href="{% url 'blog_detaille' post.id %}" class="social-info">
-                                    <span class="lnr lnr-move"></span>
-                                    <p class="hover-text">Read More</p>
-                                </a>
-                                {% if user.is_staff %}
-                                    <a href="{% url 'blog_edit' post.id %}" class="social-info">
-                                        <span class="lnr lnr-pencil"></span>
-                                        <p class="hover-text">Edit</p>
-                                    </a>
-                                    <a href="#" class="social-info delete-post" data-post-id="{{ post.id }}">
-                                        <span class="lnr lnr-trash"></span>
-                                        <p class="hover-text">Delete</p>
-                                    </a>
+                            
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Display blog post -->
+                    <div class="col-lg-4 col-md-6 searchable-item">
+                        <div class="single-blog-post">
+                            <div class="image-container">
+                                {% if post.image %}
+                                    <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
+                                {% else %}
+                                    <img class="img-fluid" src="{% static 'img/zaraa.jpg' %}" alt="">
                                 {% endif %}
+                                <span class="category-label">{{ post.get_category_display }}</span>
+                            </div>
+                            <div class="post-details">
+                                <h6>{{ post.title }}</h6>
+                                <div class="post-meta">
+                                    <p>By {{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+                                </div>
+                                <p>{{ post.excerpt|truncatewords:15 }}</p>
+                                <div class="post-bottom d-flex justify-content-start align-items-center">
+                                    <a href="{% url 'blog_detaille' post.id %}" class="social-info">
+                                        <span class="lnr lnr-move"></span>
+                                        <p class="hover-text">Read More</p>
+                                    </a>
+                                    {% if user.is_staff %}
+                                        <a href="{% url 'blog_edit' post.id %}" class="social-info">
+                                            <span class="lnr lnr-pencil"></span>
+                                            <p class="hover-text">Edit</p>
+                                        </a>
+                                        <a href="#" class="social-info delete-post" data-post-id="{{ post.id }}">
+                                            <span class="lnr lnr-trash"></span>
+                                            <p class="hover-text">Delete</p>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             {% empty %}
                 <p>No royal decrees available for this category.</p>
             {% endfor %}

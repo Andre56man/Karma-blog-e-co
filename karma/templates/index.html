@@ -31,12 +31,14 @@
         background: url("{% static 'img/moccasin.jpg' %}") center/cover;
         opacity: 0.1;
     }
-    .banner-area h1 {
+    .banner-area h6 {
         font-family: 'Cinzel Decorative', cursive;
         font-weight: 900;
+        color:white;
         font-size: 48px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
         position: relative;
+        margin:150px;
     }
     .features-area {
         background: var(--ivory);
@@ -332,9 +334,9 @@
 <!-- Banner Area -->
 <section class="banner-area">
     <div class="royal-crest owl-carousel">
-        <img src="{% static 'img/nike.png' %}" alt="Royal Crest 1">
         <img src="{% static 'img/moccasin.jpg' %}" alt="Royal Crest 2">
-        <img src="{% static 'img/botte.png' %}" alt="Royal Crest 3">
+        <h6>Royal karma shop</h6>
+
     </div>
     <div class="container">
         <div class="row fullscreen align-items-center justify-content-start">
@@ -357,28 +359,24 @@
         <div class="row features-inner">
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-features">
-                    <div class="f-icon"><img src="{% static 'img/features/f-icon1.png' %}" alt=""></div>
                     <h6>Royal Delivery</h6>
                     <p>Swift and Free to All Corners of the Kingdom</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-features">
-                    <div class="f-icon"><img src="{% static 'img/features/f-icon2.png' %}" alt=""></div>
                     <h6>Regal Returns</h6>
                     <p>Graceful Exchanges for Your Satisfaction</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-features">
-                    <div class="f-icon"><img src="{% static 'img/features/f-icon3.png' %}" alt=""></div>
                     <h6>24/7 Counsel</h6>
                     <p>Support Fit for Royalty, Day or Night</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-features">
-                    <div class="f-icon"><img src="{% static 'img/features/f-icon4.png' %}" alt=""></div>
                     <h6>Secure Treasury</h6>
                     <p>Payments Guarded by the Crown for more security</p>
                 </div>
